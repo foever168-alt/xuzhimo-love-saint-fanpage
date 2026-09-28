@@ -146,13 +146,18 @@
     .btn {
       min-height: 44px;
       padding: 9px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 0;
       border-radius: 10px;
       font-weight: 800;
+      text-decoration: none;
     }
     .btn-primary { color: white; background: var(--brand); }
     .btn-primary:hover { background: var(--brand-dark); }
     .btn-soft { color: var(--ink); background: #e9edef; }
+    .mobile-start { display: none; }
     .tabs { display: flex; gap: 4px; border-top: 1px solid var(--line); overflow-x: auto; }
     .tab { padding: 14px 17px 12px; border: 0; border-bottom: 3px solid transparent; color: var(--muted); background: transparent; font-weight: 700; white-space: nowrap; }
     .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
@@ -293,7 +298,7 @@
     .card-actions .btn { flex: 1; }
     .open-card { display: none; width: 100%; margin-top: 12px; }
     .open-card.show { display: block; }
-    .modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(14,35,43,.65); backdrop-filter: blur(7px); }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; overflow-y: auto; background: rgba(14,35,43,.65); backdrop-filter: blur(7px); }
     .modal-backdrop[hidden] { display: none; }
     .login-modal { width: min(460px, 100%); overflow: hidden; background: var(--white); border-radius: 22px; box-shadow: 0 24px 80px rgba(0,0,0,.26); }
     .login-visual { height: 150px; position: relative; background: url('cambridge-cover.jpg') center 42% / cover; }
@@ -313,26 +318,90 @@
       .topbar-inner { padding: 0 12px; gap: 10px; }
       .wordmark { font-size: 23px; }
       .wordmark small, .search, .nav-icon:not(.active) { display: none; }
-      .cover { height: 230px; border-radius: 0; }
+      .nav-icon { width: 42px; height: 42px; }
+      .cover { height: 220px; border-radius: 0; }
       .profile { padding: 0; }
-      .identity { min-height: 210px; padding: 82px 16px 15px; display: block; text-align: center; }
-      .avatar { left: 50%; top: -62px; width: 138px; height: 138px; transform: translateX(-50%); }
+      .identity { min-height: 202px; padding: 72px 16px 15px; display: block; text-align: center; }
+      .avatar { left: 50%; top: -56px; width: 124px; height: 124px; transform: translateX(-50%); }
+      .online { right: 6px; bottom: 6px; width: 21px; height: 21px; }
       .bio { padding-top: 0; }
-      .bio h1 { font-size: 30px; }
+      .bio h1 { font-size: clamp(26px, 7.5vw, 30px); }
+      .bio p { margin: 6px auto 3px; max-width: 32rem; font-size: 14px; }
       .profile-actions { justify-content: center; margin-top: 13px; }
-      .tabs { padding: 0 8px; }
-      .layout { display: block; margin-top: 12px; padding: 0 10px; }
-      .side { display: none; }
+      .profile-actions { flex-wrap: wrap; }
+      .profile-actions .btn { min-height: 48px; }
+      .mobile-start { display: inline-flex; color: var(--brand-dark); background: #e5f1ef; }
+      .tabs { padding: 0 8px; scrollbar-width: none; }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab { min-height: 48px; }
+      .layout { display: block; margin: 12px auto 34px; padding: 0 10px; }
+      .side { position: static; display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
+      .side .panel:first-child { display: none; }
+      .side .panel { padding: 14px 15px; }
+      .side .panel h2 { margin-bottom: 8px; font-size: 17px; }
+      .badge-grid { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; }
+      .badge { min-width: 0; padding: 8px 3px; font-size: 11px; line-height: 1.35; }
+      .badge strong { font-size: 19px; }
       .card { border-radius: 13px; }
       .composer { display: none; }
+      .feed, .game-feed { gap: 12px; }
+      .game-status { position: sticky; top: 68px; z-index: 18; padding: 13px 15px; box-shadow: 0 8px 24px rgba(24,52,62,.13); }
+      #gameStatus { scroll-margin-top: 68px; }
+      .game-status h2 { font-size: 17px; }
+      .progress-track { margin: 9px 0 6px; }
       .post-body, .answer-box { padding-left: 15px; padding-right: 15px; }
+      .post-copy { margin: 13px 0; }
+      .challenge { padding: 18px 15px; }
+      .question-foot { align-items: flex-start; flex-direction: column; }
+      .answer-form input { min-height: 50px; padding: 12px 13px; font-size: 16px; }
+      .send { flex: 0 0 50px; width: 50px; min-height: 50px; }
+      .post-actions button { min-height: 48px; }
+      .guest-comment-section { padding-left: 15px; padding-right: 15px; }
+      .bubble { overflow-wrap: anywhere; }
+      .modal-backdrop { place-items: start center; padding: 12px; }
+      .login-modal, .poet-card-modal { margin: auto 0; }
+      .login-visual { height: 125px; }
+      .login-content { padding: 18px; }
+      .login-content h2 { font-size: 24px; }
+      .login-content input, .card-name-edit input { min-height: 50px; font-size: 16px; }
+      .poet-card-modal { padding: 10px; border-radius: 20px; }
+      .poet-card { padding: 23px 20px; border-radius: 18px; }
+      .poet-card::before { right: 24px; top: 56px; font-size: 108px; }
+      .poet-card h2 { font-size: clamp(31px, 10vw, 38px); }
+      .poet-card h3 { margin-bottom: 13px; font-size: 21px; }
+      .card-love-note { letter-spacing: .06em; }
+      .card-dialogue { padding: 12px 13px; font-size: 14px; }
+      .card-stats { gap: 5px; margin: 13px 0; }
+      .card-stat { padding: 7px 3px; font-size: 12px; }
+      .card-stat strong { font-size: 19px; }
+      .card-badges { margin-bottom: 13px; }
+      .card-badge { padding: 6px 8px; font-size: 11px; }
+      .card-bottom { gap: 8px; }
+      .card-hidden { font-size: 13px; }
+      .card-seal { flex-basis: 96px; width: 96px; }
+      .card-seal img { width: 64px; height: 64px; }
+      .card-actions { flex-direction: column-reverse; }
+      .card-actions .btn { min-height: 50px; }
+      .toast { left: 12px; right: 12px; bottom: 12px; max-width: none; text-align: center; }
       .cover-note { display: none; }
     }
     @media (max-width: 430px) {
       .profile-actions .btn-soft { display: none; }
       .tab { padding-left: 13px; padding-right: 13px; }
       .quote { font-size: 20px; }
-      .blank { min-width: 140px; }
+      .blank { min-width: min(140px, 46vw); }
+      .cover { height: 190px; }
+      .identity { min-height: 196px; }
+      .stats { font-size: 13px; }
+      .badge-grid { gap: 4px; }
+      .badge { padding-left: 2px; padding-right: 2px; font-size: 10px; }
+      .game-status-head { gap: 8px; }
+      .score-pill { padding: 5px 9px; }
+      .answer-form { gap: 7px; }
+      .card-charms { letter-spacing: .2em; }
+    }
+    @media (max-height: 700px) and (max-width: 790px) {
+      .modal-backdrop { align-items: start; }
     }
   </style>
 </head>
@@ -367,6 +436,7 @@
         <div class="profile-actions">
           <button class="btn btn-primary" id="loginButton">♡ 訪客登入</button>
           <button class="btn btn-soft" id="followButton">＋ 追蹤</button>
+          <a class="btn mobile-start" href="#gameStatus">開始接句 ↓</a>
         </div>
       </div>
       <nav class="tabs" aria-label="粉絲專頁分頁">
@@ -409,7 +479,7 @@
         <div class="composer-row"><img class="mini-avatar" src="xuzhimo-avatar.jpg" alt=""><div class="composer-placeholder">徐志摩，今晚想說哪半句情話？</div></div>
       </section>
 
-      <section class="card game-status">
+      <section class="card game-status" id="gameStatus">
         <div class="game-status-head"><h2>情話接句進行中</h2><span class="score-pill"><b id="gameScore">0</b> 分</span></div>
         <div class="progress-track"><div class="progress-fill" id="gameProgress"></div></div>
         <div class="progress-meta"><span>答對 <b id="gameCorrect">0</b>／8 題</span><span>每題最多兩次機會</span></div>
