@@ -175,6 +175,8 @@
     .badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .badge { padding: 11px 8px; text-align: center; background: var(--paper); border: 1px solid #ebe5da; border-radius: 12px; font-size: 13px; }
     .badge strong { display: block; font-size: 21px; }
+    .badge.locked { opacity: .38; filter: grayscale(1); }
+    .badge.earned { color: #174e42; background: #edf8f3; border-color: #bfe2d3; box-shadow: 0 5px 14px rgba(31,108,91,.1); }
     .feed { display: grid; gap: 16px; }
     .composer { padding: 15px 18px; }
     .composer-row { display: flex; gap: 12px; align-items: center; }
@@ -274,6 +276,10 @@
     .card-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 18px 0; }
     .card-stat { position: relative; z-index: 1; padding: 9px; text-align: center; background: rgba(255,248,245,.13); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
     .card-stat strong { display: block; font-size: 22px; }
+    .card-badges { position: relative; z-index: 1; margin: 0 0 18px; }
+    .card-badges-label { margin-bottom: 8px; color: #ffe9bd; font-size: 12px; font-weight: 900; letter-spacing: .12em; }
+    .card-badges-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .card-badge { padding: 7px 10px; color: #fff7e6; background: rgba(255,248,245,.14); border: 1px solid rgba(255,225,164,.38); border-radius: 99px; font-size: 12px; font-weight: 800; }
     .card-bottom { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
     .card-hidden { padding-bottom: 4px; }
     .card-seal { position: relative; flex: 0 0 112px; width: 112px; text-align: center; transform: rotate(-7deg); }
@@ -390,10 +396,10 @@
       <section class="card panel">
         <h2>本週情話徽章</h2>
         <div class="badge-grid">
-          <div class="badge"><strong>💘</strong>命定之人</div>
-          <div class="badge"><strong>✒️</strong>徐氏傳人</div>
-          <div class="badge"><strong>🌙</strong>康橋知音</div>
-          <div class="badge"><strong>⚡</strong>秒答 Baby</div>
+          <div class="badge locked" data-badge-id="destined"><strong>💘</strong>命定之人</div>
+          <div class="badge locked" data-badge-id="heir"><strong>✒️</strong>徐氏傳人</div>
+          <div class="badge locked" data-badge-id="cambridge"><strong>🌙</strong>康橋知音</div>
+          <div class="badge locked" data-badge-id="speed"><strong>⚡</strong>秒答 Baby</div>
         </div>
       </section>
     </aside>
@@ -497,6 +503,7 @@
           <div class="card-stat"><strong id="cardScore">40</strong>浪漫值</div>
           <div class="card-stat"><strong id="cardComments">0</strong>回音</div>
         </div>
+        <div class="card-badges"><div class="card-badges-label">本週獲得的情話徽章</div><div class="card-badges-list" id="cardBadgeList"></div></div>
         <div class="card-bottom"><div class="card-hidden">隱藏屬性：<strong id="cardHiddenTitle">康橋知音</strong></div><div class="card-seal"><img src="xuzhimo-avatar.jpg" alt="徐志摩認證頭像"><div class="card-seal-mark">志摩北鼻<small>浪漫認證</small></div><div class="card-date" id="cardDate">2026年9月28日</div></div></div>
       </div>
       <div class="card-name-edit"><label for="cardNameInput">詩人卡要寫哪個名字？</label><input id="cardNameInput" maxlength="16"></div>
@@ -879,6 +886,27 @@
       else if (gameState.secondCorrect > gameState.firstCorrect) hidden = '慢熱型情人';
       return { primary, hidden, rarity: represented >= 4 && gameState.firstCorrect >= 6 ? 'UR' : 'SSR' };
     }
+    function badgesForGame() {
+      if (!gameState) return [];
+      const completedQuestions = gameState.completedIds.map(questionById).filter(Boolean);
+      return [
+        { id:'destined', icon:'💘', label:'命定之人', earned:gameState.firstCorrect >= 1, hint:'至少一題首次作答就答對' },
+        { id:'heir', icon:'✒️', label:'徐氏傳人', earned:gameState.correct >= TARGET_CORRECT, hint:`完成 ${TARGET_CORRECT} 題挑戰` },
+        { id:'cambridge', icon:'🌙', label:'康橋知音', earned:completedQuestions.some(question => question.speaker === '徐志摩'), hint:'答對一題徐志摩情話' },
+        { id:'speed', icon:'⚡', label:'秒答 Baby', earned:gameState.firstCorrect >= 6, hint:'至少六題首次作答就答對' }
+      ];
+    }
+    function updateBadgePanel() {
+      const badges = badgesForGame();
+      badges.forEach(badge => {
+        const element = document.querySelector(`[data-badge-id="${badge.id}"]`);
+        if (!element) return;
+        element.classList.toggle('earned', badge.earned);
+        element.classList.toggle('locked', !badge.earned);
+        element.title = badge.earned ? `已獲得：${badge.hint}` : `尚未獲得：${badge.hint}`;
+        element.setAttribute('aria-label', `${badge.label}，${badge.earned ? '已獲得' : '尚未獲得'}`);
+      });
+    }
     function updateGameStatus() {
       if (!gameState) return;
       const percent = Math.min(100, gameState.correct / TARGET_CORRECT * 100);
@@ -888,6 +916,7 @@
       $('#sideComments').textContent = gameState.commentPoints;
       $('#sideTitle').textContent = currentProvisionalTitle();
       $('#openPoetCard').classList.toggle('show', gameState.correct >= TARGET_CORRECT);
+      updateBadgePanel();
     }
     function postMarkup(post, index) {
       const q = questionById(post.qid);
@@ -1010,6 +1039,7 @@
       $('#cardScore').textContent = gameState.score;
       $('#cardComments').textContent = gameState.commentPoints;
       $('#cardHiddenTitle').textContent = title.hidden;
+      $('#cardBadgeList').innerHTML = badgesForGame().filter(badge => badge.earned).map(badge => `<span class="card-badge">${badge.icon} ${badge.label}</span>`).join('');
       $('#poetCardBackdrop').hidden = false;
     }
     $('#openPoetCard').addEventListener('click', showPoetCard);
@@ -1030,6 +1060,7 @@
     }
     $('#downloadPoetCard').addEventListener('click', async () => {
       const title = titleForGame();
+      const earnedBadges = badgesForGame().filter(badge => badge.earned);
       const name = $('#cardNameInput').value.trim() || currentUser;
       const date = todayCardDate();
       const dialogue = $('#cardDialogue').textContent;
@@ -1056,12 +1087,19 @@
       if (line) ctx.fillText(line,90,y);
       const stats = [[`答對 ${gameState.correct} 題`,60],[`浪漫值 ${gameState.score}`,320],[`回音 ${gameState.commentPoints}`,580]];
       for (const [label,x] of stats) { ctx.fillStyle = 'rgba(255,255,255,.13)'; ctx.fillRect(x,570,240,110); ctx.fillStyle = '#fff7e6'; ctx.textAlign = 'center'; ctx.font = '700 29px sans-serif'; ctx.fillText(label,x+120,635); }
-      ctx.textAlign = 'left'; ctx.font = '27px sans-serif'; ctx.fillText(`隱藏屬性：${title.hidden}`,65,760);
-      ctx.save(); ctx.beginPath(); ctx.arc(705,855,72,0,Math.PI*2); ctx.clip(); drawImageCover(ctx,avatar,633,783,144,144); ctx.restore();
-      ctx.strokeStyle = '#f6d595'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(705,855,75,0,Math.PI*2); ctx.stroke();
-      ctx.save(); ctx.translate(705,958); ctx.rotate(-7 * Math.PI / 180);
+      ctx.textAlign = 'left'; ctx.fillStyle = '#ffe9bd'; ctx.font = '700 20px sans-serif'; ctx.fillText('本週獲得的情話徽章',65,725);
+      earnedBadges.forEach((badge,index) => {
+        const x = 65 + (index % 2) * 365; const y = 750 + Math.floor(index / 2) * 62;
+        ctx.fillStyle = 'rgba(255,248,245,.15)'; ctx.strokeStyle = 'rgba(255,225,164,.5)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect(x,y,335,46,23); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#fff7e6'; ctx.font = '700 22px sans-serif'; ctx.fillText(`${badge.icon} ${badge.label}`,x+18,y+30);
+      });
+      ctx.fillStyle = '#fff7e6'; ctx.font = '27px sans-serif'; ctx.fillText(`隱藏屬性：${title.hidden}`,65,900);
+      ctx.save(); ctx.beginPath(); ctx.arc(705,920,72,0,Math.PI*2); ctx.clip(); drawImageCover(ctx,avatar,633,848,144,144); ctx.restore();
+      ctx.strokeStyle = '#f6d595'; ctx.lineWidth = 7; ctx.beginPath(); ctx.arc(705,920,75,0,Math.PI*2); ctx.stroke();
+      ctx.save(); ctx.translate(705,1023); ctx.rotate(-7 * Math.PI / 180);
       ctx.fillStyle = '#ffedbf'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(5,26,38,.75)'; ctx.shadowBlur = 7; ctx.font = '900 27px sans-serif'; ctx.fillText('志摩北鼻',0,-3); ctx.font = '800 18px sans-serif'; ctx.fillText('浪漫認證',0,25); ctx.restore();
-      ctx.fillStyle = '#fff6df'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(5,26,38,.7)'; ctx.shadowBlur = 5; ctx.font = '700 18px sans-serif'; ctx.fillText(date,705,1018); ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff6df'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(5,26,38,.7)'; ctx.shadowBlur = 5; ctx.font = '700 18px sans-serif'; ctx.fillText(date,705,1083); ctx.shadowBlur = 0;
       ctx.fillStyle = '#fff3dc'; ctx.textAlign = 'left'; ctx.font = '23px sans-serif'; ctx.fillText('徐志摩的情聖粉絲專頁・教學角色模擬',60,1125);
       const link = document.createElement('a'); link.download = `${name}-${title.primary}-詩人卡-直式新版.png`; link.href = canvas.toDataURL('image/png'); link.click();
     });
@@ -1075,3 +1113,4 @@
   </script>
 </body>
 </html>
+
