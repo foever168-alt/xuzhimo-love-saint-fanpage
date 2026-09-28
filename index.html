@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>徐志摩的情聖粉絲專頁</title>
+  <title>志摩的柔波區</title>
   <meta name="description" content="徐志摩說上半句，粉絲用語意接近的情話接出下半句，成為課堂裡的趣味情聖。">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='16' width='64' height='64' fill='%232f5f73'/%3E%3Cpath d='M15 43c13-2 23-12 34-28-2 17-11 30-29 34z' fill='%23fff4dd'/%3E%3C/svg%3E">
   <style>
@@ -429,7 +429,7 @@
         <div class="avatar"><img src="xuzhimo-avatar.jpg" alt="徐志摩插畫頭像"><i class="online" aria-label="在線"></i></div>
         <div class="bio">
           <span class="handle">@xuzhimo.poetry</span>
-          <h1>徐志摩的情聖粉絲專頁</h1>
+          <h1>志摩的柔波區</h1>
           <p>詩人・情聖接句發起人・康橋長期想念戶</p>
           <div class="stats"><strong>89K</strong> 位追蹤者 ・ <strong>1,921</strong> 位情話傳人</div>
         </div>
@@ -585,21 +585,103 @@
     // 資料介面刻意集中；下一階段可直接將此物件替換成 google.script.run。
     const DATA = {
       questions: [
-        { id:'XZM-001', category:'名人情話', speaker:'徐志摩', prefix:'妳以為我撿了一枝杜鵑是什麼？', answer:'是我的心的火啊', accepted:['是我的心的火啊','是我心裡的火啊'], near:['心的火','心裡的火','火啊'], semantic:['我的心為你燃燒','是我燃起的愛火','我的愛像火一樣'], mechanism:'隱喻・象徵' },
-        { id:'HUSHI-001', category:'名人情話', speaker:'胡適', prefix:'也想不相思，', answer:'可免相思苦。幾度細思量，情願相思苦', accepted:['可免相思苦幾度細思量情願相思苦'], near:['相思苦','情願相思'], semantic:['即使想念很苦我也願意','寧願承受相思之苦','再苦也還是想你'], mechanism:'反復・轉折' },
-        { id:'LU-001', category:'名人情話', speaker:'魯迅', prefix:'待我成塵時，', answer:'你將見我的微笑', accepted:['你將見我的微笑','妳將見我的微笑'], near:['見我的微笑','我的微笑'], semantic:['化成灰我仍會對你微笑','即使死去你仍能看見我的笑','我還是會笑著看你'], mechanism:'想像・反差' },
-        { id:'QIAN-001', category:'名人情話', speaker:'錢鍾書', prefix:'沒遇到你之前，我沒想過結婚；遇見你，', answer:'結婚這事我沒想過和別人', accepted:['結婚這事我沒想過和別人'], near:['沒想過和別人','結婚這事'], semantic:['這輩子我只想和你結婚','結婚的對象只會是你','我不會和別人結婚'], mechanism:'反差翻轉型' },
-        { id:'LIANG-001', category:'名人情話', speaker:'梁實秋', prefix:'你走，我不送你；你來，', answer:'無論多大風多大雨，我要去接你', accepted:['無論多大風多大雨我要去接你'], near:['我要去接你','多大風多大雨'], semantic:['即使颳風下雨我也會去接你','不管天氣多壞我都去接你','只要你來我一定去接'], mechanism:'反差翻轉型' },
-        { id:'ORGAN-001', category:'人體器官', speaker:'胃', prefix:'消化不了的是', answer:'我對妳的愛', accepted:['我對妳的愛','我對你的愛'], near:['對妳的愛','對你的愛'], semantic:['我滿滿的愛意','我愛你的心情','對你的感情'], mechanism:'特徵轉化型' },
-        { id:'ORGAN-002', category:'人體器官', speaker:'肺', prefix:'因為妳，', answer:'每一次的呼吸都有了意義', accepted:['每一次的呼吸都有了意義'], near:['呼吸都有了意義','呼吸有了意義'], semantic:['我的每次呼吸都因你有了價值','連呼吸都變得有意義','每一口氣都是為了你'], mechanism:'特徵轉化型' },
-        { id:'FOOD-001', category:'蔬果食物', speaker:'空心菜', prefix:'沒有你，', answer:'我的心都空了', accepted:['我的心都空了'], near:['心都空了','心空了'], semantic:['我的心會變得空虛','心裡就空蕩蕩的','我的心什麼都沒有了'], mechanism:'語義雙關型' },
-        { id:'FOOD-002', category:'蔬果食物', speaker:'榴槤', prefix:'我很臭，', answer:'但是我很溫柔', accepted:['但是我很溫柔','但我很溫柔'], near:['很溫柔'], semantic:['可是我的心很溫柔','外表雖臭內心卻溫柔','但我會溫柔地愛你'], mechanism:'反差翻轉型' },
-        { id:'TECH-001', category:'科技軟體', speaker:'Adobe Photoshop', prefix:'別人都用我修圖，', answer:'但我對你的愛不。修。邊。幅。', accepted:['但我對你的愛不修邊幅','我對你的愛不修邊幅'], near:['不修邊幅','愛不修邊幅'], semantic:['但愛你不需要修飾','我對你的愛不用修改','愛你的樣子不必修圖'], mechanism:'專業術語型' },
-        { id:'TECH-002', category:'科技軟體', speaker:'Excel', prefix:'104萬8576行，', answer:'行行列列裝滿了妳', accepted:['行行列列裝滿了妳','行行列列裝滿了你'], near:['行行列列','裝滿了妳','裝滿了你'], semantic:['試算表每一行每一列都是你','所有儲存格都放著你','每個表格裡全是你'], mechanism:'專業術語型' },
-        { id:'TECH-003', category:'科技軟體', speaker:'Python', prefix:'關於我的產出，不懂的人唸Ai，', answer:'懂的人唸愛（Ai）', accepted:['懂的人唸愛Ai','懂的人唸愛'], near:['唸愛','懂的人'], semantic:['懂我的人知道那是愛','其實AI就是愛','會的人讀成愛'], mechanism:'語義雙關型' },
-        { id:'OLD-001', category:'古人情話', speaker:'鍾理和', prefix:'原鄉在何處無所謂，', answer:'你在，就好', accepted:['你在就好','妳在就好'], near:['在就好'], semantic:['只要有你就夠了','有你在的地方就是家','哪裡都好只要你在'], mechanism:'反差翻轉型' },
-        { id:'OLD-002', category:'古人情話', speaker:'余光中', prefix:'車過了枋寮也罷，', answer:'不要錯過妳就好', accepted:['不要錯過妳就好','不要錯過你就好'], near:['不要錯過','錯過妳'], semantic:['只要這輩子不錯過你','錯過車站也不能錯過你','能遇見你就好'], mechanism:'語義雙關型' },
-        { id:'OLD-003', category:'古人情話', speaker:'楊逵', prefix:'送報伕發的，', answer:'是我愛你的第一手消息', accepted:['是我愛你的第一手消息','是我愛妳的第一手消息'], near:['第一手消息','愛你的消息'], semantic:['是我愛你的最新消息','是一封最先送到的情書','頭條就是我愛你'], mechanism:'專業術語型' }
+        {"id":"MING-001","category":"名人情話","speaker":"胡適","prefix":"也想不相思，可免相思苦。幾度細思量，","answer":"情願相思苦","accepted":["情願相思苦"],"near":["情願相思苦"],"semantic":[],"mechanism":"反復、轉折","difficulty":"簡單","sourceTab":"名人情話","sourceRow":"2"},
+        {"id":"MING-003","category":"名人情話","speaker":"魯迅","prefix":"待我成塵時，","answer":"你將見我的微笑","accepted":["你將見我的微笑","妳將見我的微笑"],"near":["你將見我的微笑"],"semantic":[],"mechanism":"想像、反差","difficulty":"簡單","sourceTab":"名人情話","sourceRow":"4"},
+        {"id":"MING-004","category":"名人情話","speaker":"錢鍾書","prefix":"沒遇到你之前，我沒想過結婚；","answer":"遇見你，結婚這事我沒想過和別人","accepted":["遇見你，結婚這事我沒想過和別人","遇見妳，結婚這事我沒想過和別人"],"near":["遇見你，結婚這事我沒想過和別人"],"semantic":[],"mechanism":"前後翻轉","difficulty":"普通","sourceTab":"名人情話","sourceRow":"5"},
+        {"id":"MING-005","category":"名人情話","speaker":"梁實秋","prefix":"你走，我不送你；你來，","answer":"無論多大風多大雨，我要去接你","accepted":["無論多大風多大雨，我要去接你","無論多大風多大雨，我要去接妳"],"near":["無論多大風多大雨，我要去接你"],"semantic":[],"mechanism":"對比、條件轉折","difficulty":"普通","sourceTab":"名人情話","sourceRow":"6"},
+        {"id":"MING-006","category":"名人情話","speaker":"徐志摩","prefix":"妳以為我撿了一枝杜鵑是什麼？","answer":"是我的心的火啊","accepted":["是我的心的火啊"],"near":["是我的心的火啊"],"semantic":[],"mechanism":"隱喻、象徵","difficulty":"簡單","sourceTab":"名人情話","sourceRow":"7"},
+        {"id":"BODY-001","category":"人體器官","speaker":"大腦","prefix":"人類只用了大腦的10%，","answer":"只因剩下的90%裝都是妳","accepted":["只因剩下的90%裝都是妳","只因剩下的90%裝都是你"],"near":["只因剩下的90%裝都是妳"],"semantic":[],"mechanism":"腦＝容納／思念","difficulty":"普通","sourceTab":"人體器官","sourceRow":"2"},
+        {"id":"BODY-002","category":"人體器官","speaker":"腎臟","prefix":"即使排出了再多的代謝物，","answer":"也排不了對妳的思念","accepted":["也排不了對妳的思念","也排不了對你的思念"],"near":["也排不了對妳的思念"],"semantic":[],"mechanism":"排泄→排不掉思念","difficulty":"普通","sourceTab":"人體器官","sourceRow":"3"},
+        {"id":"BODY-004","category":"人體器官","speaker":"心臟","prefix":"每一次的跳動，","answer":"都是為了跟妳一起活下去","accepted":["都是為了跟妳一起活下去","都是為了跟你一起活下去"],"near":["都是為了跟妳一起活下去"],"semantic":[],"mechanism":"心跳→生命／愛","difficulty":"普通","sourceTab":"人體器官","sourceRow":"5"},
+        {"id":"BODY-005","category":"人體器官","speaker":"肝","prefix":"爆肝多少次，","answer":"也比不上能抱著妳一次","accepted":["也比不上能抱著妳一次","也比不上能抱著你一次"],"near":["也比不上能抱著妳一次"],"semantic":[],"mechanism":"爆肝／抱妳","difficulty":"普通","sourceTab":"人體器官","sourceRow":"6"},
+        {"id":"BODY-006","category":"人體器官","speaker":"腸","prefix":"我寧願割掉盲腸，","answer":"也割捨不下妳的一切","accepted":["也割捨不下妳的一切","也割捨不下你的一切"],"near":["也割捨不下妳的一切"],"semantic":[],"mechanism":"割掉→割捨","difficulty":"普通","sourceTab":"人體器官","sourceRow":"7"},
+        {"id":"BODY-007","category":"人體器官","speaker":"肺","prefix":"因為妳，","answer":"每一次的呼吸都有了意義","accepted":["每一次的呼吸都有了意義"],"near":["每一次的呼吸都有了意義"],"semantic":[],"mechanism":"呼吸→生命意義","difficulty":"普通","sourceTab":"人體器官","sourceRow":"8"},
+        {"id":"FOOD-002","category":"蔬果食物","speaker":"高麗菜","prefix":"人的腦皺褶為了記憶，","answer":"我的皺褶是為了你","accepted":["我的皺褶是為了你","我的皺褶是為了妳"],"near":["我的皺褶是為了你"],"semantic":[],"mechanism":"外形類比","difficulty":"簡單","sourceTab":"蔬果食物","sourceRow":"3"},
+        {"id":"FOOD-003","category":"蔬果食物","speaker":"空心菜","prefix":"沒有你，","answer":"我的心都空了","accepted":["我的心都空了"],"near":["我的心都空了"],"semantic":[],"mechanism":"名稱拆解","difficulty":"簡單","sourceTab":"蔬果食物","sourceRow":"4"},
+        {"id":"FOOD-005","category":"蔬果食物","speaker":"檸檬","prefix":"雖然我品嚐起來很酸，","answer":"但是我絕對不會讓妳鼻酸跟心酸","accepted":["但是我絕對不會讓妳鼻酸跟心酸","但是我絕對不會讓你鼻酸跟心酸"],"near":["但是我絕對不會讓妳鼻酸跟心酸"],"semantic":[],"mechanism":"「酸」的多義","difficulty":"普通","sourceTab":"蔬果食物","sourceRow":"6"},
+        {"id":"FOOD-006","category":"蔬果食物","speaker":"玉米","prefix":"除了金針菇，","answer":"也請別忘了我","accepted":["也請別忘了我"],"near":["也請別忘了我"],"semantic":[],"mechanism":"前文互文","difficulty":"簡單","sourceTab":"蔬果食物","sourceRow":"7"},
+        {"id":"FOOD-007","category":"蔬果食物","speaker":"凍豆腐","prefix":"我心中的空隙，","answer":"是為了能容納對你的愛意","accepted":["是為了能容納對你的愛意","是為了能容納對妳的愛意"],"near":["是為了能容納對你的愛意"],"semantic":[],"mechanism":"孔隙→心的空間","difficulty":"普通","sourceTab":"蔬果食物","sourceRow":"8"},
+        {"id":"FOOD-008","category":"蔬果食物","speaker":"榴槤","prefix":"我很臭，","answer":"但是我很溫柔","accepted":["但是我很溫柔"],"near":["但是我很溫柔"],"semantic":[],"mechanism":"性質反差","difficulty":"簡單","sourceTab":"蔬果食物","sourceRow":"9"},
+        {"id":"TECH-001","category":"科技軟體","speaker":"Adobe Photoshop","prefix":"別人都用我修圖，","answer":"但我對你的愛不。修。邊。幅","accepted":["但我對你的愛不。修。邊。幅","但我對妳的愛不。修。邊。幅"],"near":["但我對你的愛不。修。邊。幅"],"semantic":[],"mechanism":"「修圖／不修邊幅」雙關","difficulty":"普通","sourceTab":"科技軟體","sourceRow":"2"},
+        {"id":"TECH-002","category":"科技軟體","speaker":"Python","prefix":"關於我的產出，不懂的人唸Ai，","answer":"懂的人唸愛（Ai）","accepted":["懂的人唸愛（Ai）"],"near":["懂的人唸愛（Ai）"],"semantic":[],"mechanism":"AI／愛諧音","difficulty":"簡單","sourceTab":"科技軟體","sourceRow":"3"},
+        {"id":"TECH-003","category":"科技軟體","speaker":"Microsoft Word","prefix":"我是Word，","answer":"妳是我的","accepted":["妳是我的","你是我的"],"near":["妳是我的"],"semantic":[],"mechanism":"Word＝我的（wordplay）","difficulty":"簡單","sourceTab":"科技軟體","sourceRow":"4"},
+        {"id":"TECH-004","category":"科技軟體","speaker":"Excel","prefix":"104萬8576行，","answer":"行行列列裝滿了妳","accepted":["行行列列裝滿了妳","行行列列裝滿了你"],"near":["行行列列裝滿了妳"],"semantic":[],"mechanism":"軟體規格→誇飾","difficulty":"簡單","sourceTab":"科技軟體","sourceRow":"5"},
+        {"id":"TECH-005","category":"科技軟體","speaker":"電商","prefix":"別人上網買快樂，","answer":"但我想買的是你的不快樂","accepted":["但我想買的是你的不快樂","但我想買的是妳的不快樂"],"near":["但我想買的是你的不快樂"],"semantic":[],"mechanism":"「買快樂／買走不快樂」轉義","difficulty":"普通","sourceTab":"科技軟體","sourceRow":"6"},
+        {"id":"TECH-006","category":"科技軟體","speaker":"Autodesk CAD","prefix":"世界上的所有我都能建模，","answer":"唯有妳美得我不敢","accepted":["唯有妳美得我不敢","唯有你美得我不敢"],"near":["唯有妳美得我不敢"],"semantic":[],"mechanism":"建模能力→例外","difficulty":"簡單","sourceTab":"科技軟體","sourceRow":"7"},
+        {"id":"TECH-007","category":"科技軟體","speaker":"Adobe After Effects","prefix":"面對妳都在預覽視窗，","answer":"不然怎麼隨時會有粉紅濾鏡跟飄落花瓣","accepted":["不然怎麼隨時會有粉紅濾鏡跟飄落花瓣"],"near":["不然怎麼隨時會有粉紅濾鏡跟飄落花瓣"],"semantic":[],"mechanism":"視覺特效→戀愛感受","difficulty":"普通","sourceTab":"科技軟體","sourceRow":"8"},
+        {"id":"TECH-008","category":"科技軟體","speaker":"CISCO","prefix":"在資料庫中我管全世界，","answer":"但現實裡只有妳管得了我","accepted":["但現實裡只有妳管得了我","但現實裡只有你管得了我"],"near":["但現實裡只有妳管得了我"],"semantic":[],"mechanism":"控制／被控制反轉","difficulty":"普通","sourceTab":"科技軟體","sourceRow":"9"},
+        {"id":"OLD-001","category":"古人情話","speaker":"鍾理和","prefix":"原鄉在何處無所謂，","answer":"你在，就好","accepted":["你在，就好","妳在，就好"],"near":["你在，就好"],"semantic":[],"mechanism":"對比、直陳｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"2"},
+        {"id":"OLD-002","category":"古人情話","speaker":"李喬","prefix":"失去妳、忘記妳、放棄妳，","answer":"是妳給我的寒夜三部曲","accepted":["是妳給我的寒夜三部曲","是你給我的寒夜三部曲"],"near":["是妳給我的寒夜三部曲"],"semantic":[],"mechanism":"排比、轉喻｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"3"},
+        {"id":"OLD-004","category":"古人情話","speaker":"龍瑛宗","prefix":"我想離開植有木瓜樹的小鎮，","answer":"因為我的歸處只有妳","accepted":["因為我的歸處只有妳","因為我的歸處只有你"],"near":["因為我的歸處只有妳"],"semantic":[],"mechanism":"轉折、唯一化｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"5"},
+        {"id":"OLD-005","category":"古人情話","speaker":"張良澤","prefix":"整理那麼多文獻，","answer":"還是想回家為妳煮一碗雞蛋麵線。（蛋是家裡的雞生的）","accepted":["還是想回家為妳煮一碗雞蛋麵線。（蛋是家裡的雞生的）","還是想回家為你煮一碗雞蛋麵線。（蛋是家裡的雞生的）"],"near":["還是想回家為妳煮一碗雞蛋麵線。（蛋是家裡的雞生的）"],"semantic":[],"mechanism":"轉折、生活化｜反差翻轉型","difficulty":"挑戰","sourceTab":"古人情話","sourceRow":"6"},
+        {"id":"OLD-006","category":"古人情話","speaker":"賴和","prefix":"人間未許權存在，","answer":"勇士當為妳鬥爭","accepted":["勇士當為妳鬥爭","勇士當為你鬥爭"],"near":["勇士當為妳鬥爭"],"semantic":[],"mechanism":"典故改寫、誓言｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"7"},
+        {"id":"OLD-007","category":"古人情話","speaker":"三島由紀夫","prefix":"把對你的愛，","answer":"全藏在了金閣寺","accepted":["全藏在了金閣寺"],"near":["全藏在了金閣寺"],"semantic":[],"mechanism":"隱喻、象徵｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"8"},
+        {"id":"OLD-008","category":"古人情話","speaker":"翁鬧","prefix":"沒有妳，","answer":"我願當一輩子的羅漢腳","accepted":["我願當一輩子的羅漢腳"],"near":["我願當一輩子的羅漢腳"],"semantic":[],"mechanism":"條件句、身分隱喻｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"9"},
+        {"id":"OLD-009","category":"古人情話","speaker":"余光中","prefix":"車過了枋寮也罷，","answer":"不要錯過妳就好","accepted":["不要錯過妳就好","不要錯過你就好"],"near":["不要錯過妳就好"],"semantic":[],"mechanism":"語義雙關、對比｜語義雙關型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"10"},
+        {"id":"OLD-010","category":"古人情話","speaker":"李昂","prefix":"你若是的信徒，我則化身一只香爐，","answer":"絕不放在北港","accepted":["絕不放在北港"],"near":["絕不放在北港"],"semantic":[],"mechanism":"宗教意象、反差｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"11"},
+        {"id":"OLD-012","category":"古人情話","speaker":"七等生","prefix":"李龍笫不再嚮往自由，","answer":"只愛我的黑眼珠","accepted":["只愛我的黑眼珠"],"near":["只愛我的黑眼珠"],"semantic":[],"mechanism":"角色代入、轉折｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"13"},
+        {"id":"OLD-013","category":"古人情話","speaker":"賴和","prefix":"一桿秤仔，","answer":"也秤不了我對你的心意","accepted":["也秤不了我對你的心意","也秤不了我對妳的心意"],"near":["也秤不了我對你的心意"],"semantic":[],"mechanism":"衡量隱喻、誇飾｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"14"},
+        {"id":"OLD-014","category":"古人情話","speaker":"王禎和","prefix":"為了你，","answer":"我嫁妝，一牛車","accepted":["我嫁妝，一牛車"],"near":["我嫁妝，一牛車"],"semantic":[],"mechanism":"誇飾、生活意象｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"15"},
+        {"id":"OLD-015","category":"古人情話","speaker":"吳濁流","prefix":"失去妳，","answer":"我成了亞細亞的孤兒","accepted":["我成了亞細亞的孤兒"],"near":["我成了亞細亞的孤兒"],"semantic":[],"mechanism":"典故轉義、身分隱喻｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"16"},
+        {"id":"OLD-016","category":"古人情話","speaker":"楊逵","prefix":"送報伕發的，","answer":"是我愛你的第一手消息","accepted":["是我愛你的第一手消息","是我愛妳的第一手消息"],"near":["是我愛你的第一手消息"],"semantic":[],"mechanism":"職業語彙雙關｜語義雙關型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"17"},
+        {"id":"OLD-019","category":"古人情話","speaker":"CPU","prefix":"我的內心只為你澎湃，","answer":"只為了你發熱","accepted":["只為了你發熱","只為了妳發熱"],"near":["只為了你發熱"],"semantic":[],"mechanism":"硬體特性擬人｜專業術語型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"20"},
+        {"id":"OLD-020","category":"古人情話","speaker":"Main Memory","prefix":"不斷延伸的空間，","answer":"只為了記住你所有的一切","accepted":["只為了記住你所有的一切","只為了記住妳所有的一切"],"near":["只為了記住你所有的一切"],"semantic":[],"mechanism":"記憶術語轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"21"},
+        {"id":"OLD-023","category":"古人情話","speaker":"Branch Target Buffer","prefix":"探索方向，","answer":"只為了找到你的所在","accepted":["只為了找到你的所在","只為了找到妳的所在"],"near":["只為了找到你的所在"],"semantic":[],"mechanism":"分支預測術語轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"24"},
+        {"id":"OLD-024","category":"古人情話","speaker":"徐志摩","prefix":"妳以為妳拉鋸子一樣扯的是什麼？","answer":"是我肉做的心啊","accepted":["是我肉做的心啊"],"near":["是我肉做的心啊"],"semantic":[],"mechanism":"設問、隱喻｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"25"},
+        {"id":"OLD-025","category":"古人情話","speaker":"錢鍾書","prefix":"沒遇到你之前，我沒想過結婚，","answer":"遇見你，結婚這事我沒想過和別人","accepted":["遇見你，結婚這事我沒想過和別人","遇見妳，結婚這事我沒想過和別人"],"near":["遇見你，結婚這事我沒想過和別人"],"semantic":[],"mechanism":"前後翻轉｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"26"},
+        {"id":"OLD-027","category":"古人情話","speaker":"梁實秋","prefix":"你走，我不送你；你來，","answer":"無論多大風多大雨，我要去接你","accepted":["無論多大風多大雨，我要去接你","無論多大風多大雨，我要去接妳"],"near":["無論多大風多大雨，我要去接你"],"semantic":[],"mechanism":"對比、條件轉折｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"28"},
+        {"id":"OLD-028","category":"古人情話","speaker":"胡適","prefix":"也想不相思，可免相思苦。幾度細思量，","answer":"情願相思苦","accepted":["情願相思苦"],"near":["情願相思苦"],"semantic":[],"mechanism":"反復、轉折｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"29"},
+        {"id":"OLD-029","category":"古人情話","speaker":"魯迅","prefix":"待我成塵時，","answer":"你將見我的微笑","accepted":["你將見我的微笑","妳將見我的微笑"],"near":["你將見我的微笑"],"semantic":[],"mechanism":"想像、反差｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"30"},
+        {"id":"OLD-030","category":"古人情話","speaker":"南女極致黑悠遊卡","prefix":"因為我黑 這樣，","answer":"才能襯托妳的白","accepted":["才能襯托妳的白","才能襯托你的白"],"near":["才能襯托妳的白"],"semantic":[],"mechanism":"色彩對比、擬人｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"31"},
+        {"id":"OLD-031","category":"古人情話","speaker":"沈從文","prefix":"我行過很多地方的橋，看過許多次數的雲，","answer":"喝過許多種類的酒，卻只愛過一個正當最好年齡的人","accepted":["喝過許多種類的酒，卻只愛過一個正當最好年齡的人"],"near":["喝過許多種類的酒，卻只愛過一個正當最好年齡的人"],"semantic":[],"mechanism":"排比、轉折｜反差翻轉型","difficulty":"挑戰","sourceTab":"古人情話","sourceRow":"32"},
+        {"id":"OLD-032","category":"古人情話","speaker":"南女透明一卡通","prefix":"我透明，","answer":"是為了讓妳看透我的心","accepted":["是為了讓妳看透我的心","是為了讓你看透我的心"],"near":["是為了讓妳看透我的心"],"semantic":[],"mechanism":"透明特性雙關｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"33"},
+        {"id":"OLD-036","category":"古人情話","speaker":"阿飽","prefix":"如果妳想收到花，","answer":"我會送妳雞米花","accepted":["我會送妳雞米花","我會送你雞米花"],"near":["我會送妳雞米花"],"semantic":[],"mechanism":"語義雙關、替代｜語義雙關型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"37"},
+        {"id":"OLD-037","category":"古人情話","speaker":"阿飽","prefix":"不能給妳榮華富貴，","answer":"但一定有三餐加宵夜","accepted":["但一定有三餐加宵夜"],"near":["但一定有三餐加宵夜"],"semantic":[],"mechanism":"對比、承諾｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"38"},
+        {"id":"OLD-038","category":"古人情話","speaker":"阿飽","prefix":"要吃哪家傳給我，","answer":"這個週末跟我走","accepted":["這個週末跟我走"],"near":["這個週末跟我走"],"semantic":[],"mechanism":"祈使、行動邀約｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"39"},
+        {"id":"OLD-039","category":"古人情話","speaker":"阿飽","prefix":"可惜沒有參與妳的過去，","answer":"今天起我們用美食寫日記","accepted":["今天起我們用美食寫日記"],"near":["今天起我們用美食寫日記"],"semantic":[],"mechanism":"轉折、隱喻｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"40"},
+        {"id":"OLD-040","category":"古人情話","speaker":"阿飽","prefix":"不用禁止自己吃東西，","answer":"我家沒有體重機","accepted":["我家沒有體重機"],"near":["我家沒有體重機"],"semantic":[],"mechanism":"反差、幽默｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"41"},
+        {"id":"OLD-041","category":"古人情話","speaker":"阿飽","prefix":"想吃什麼儘量點，","answer":"妳吃不完的我都吃得下","accepted":["妳吃不完的我都吃得下","你吃不完的我都吃得下"],"near":["妳吃不完的我都吃得下"],"semantic":[],"mechanism":"誇飾、承諾｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"42"},
+        {"id":"OLD-042","category":"古人情話","speaker":"阿飽","prefix":"甜言蜜語我很少說，","answer":"妳的蝦殼只有我能剝","accepted":["妳的蝦殼只有我能剝","你的蝦殼只有我能剝"],"near":["妳的蝦殼只有我能剝"],"semantic":[],"mechanism":"轉折、行動代言｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"43"},
+        {"id":"OLD-043","category":"古人情話","speaker":"阿飽","prefix":"月經多痛我不懂，","answer":"黑糖紅豆湯的食譜我有","accepted":["黑糖紅豆湯的食譜我有"],"near":["黑糖紅豆湯的食譜我有"],"semantic":[],"mechanism":"轉折、照顧承諾｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"44"},
+        {"id":"OLD-044","category":"古人情話","speaker":"阿飽","prefix":"最近都喝無糖，","answer":"畢竟有妳在一切都已經很甜","accepted":["畢竟有妳在一切都已經很甜","畢竟有你在一切都已經很甜"],"near":["畢竟有妳在一切都已經很甜"],"semantic":[],"mechanism":"味覺轉義、反差｜語義雙關型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"45"},
+        {"id":"OLD-045","category":"古人情話","speaker":"阿飽","prefix":"我很胖，","answer":"跟我在一起看起來會很瘦","accepted":["跟我在一起看起來會很瘦"],"near":["跟我在一起看起來會很瘦"],"semantic":[],"mechanism":"對比、反差｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"46"},
+        {"id":"OLD-046","category":"古人情話","speaker":"家森諭高","prefix":"我喜歡你，但請不要跟我說謝謝，","answer":"因為我這次沒打算開玩笑","accepted":["因為我這次沒打算開玩笑"],"near":["因為我這次沒打算開玩笑"],"semantic":[],"mechanism":"轉折、認真宣告｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"47"},
+        {"id":"OLD-047","category":"古人情話","speaker":"熱情的三色貓","prefix":"如果我擋到你路了，","answer":"我是故意的","accepted":["我是故意的"],"near":["我是故意的"],"semantic":[],"mechanism":"反差、直陳｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"48"},
+        {"id":"OLD-048","category":"古人情話","speaker":"胖橘貓貓","prefix":"我的身體越來越巨大化，","answer":"因為跟你一起之後，我變幸福肥了","accepted":["因為跟你一起之後，我變幸福肥了","因為跟妳一起之後，我變幸福肥了"],"near":["因為跟你一起之後，我變幸福肥了"],"semantic":[],"mechanism":"因果、特徵擬人｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"49"},
+        {"id":"OLD-049","category":"古人情話","speaker":"西伯利亞貓（冬天的冠軍）","prefix":"我的毛長得特別長，","answer":"是為了幫你暖大腿","accepted":["是為了幫你暖大腿","是為了幫妳暖大腿"],"near":["是為了幫你暖大腿"],"semantic":[],"mechanism":"特徵擬人、目的轉義｜特徵轉化型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"50"},
+        {"id":"OLD-050","category":"古人情話","speaker":"溫柔的白貓","prefix":"我討厭手機，","answer":"我只想靜靜的看著你","accepted":["我只想靜靜的看著你","我只想靜靜的看著妳"],"near":["我只想靜靜的看著你"],"semantic":[],"mechanism":"對比、擬人｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"51"},
+        {"id":"OLD-051","category":"古人情話","speaker":"家中的皇帝忌廉貓","prefix":"家中所有物品都是我的，","answer":"你，也是屬於我的","accepted":["你，也是屬於我的","妳，也是屬於我的"],"near":["你，也是屬於我的"],"semantic":[],"mechanism":"遞進、占有宣告｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"52"},
+        {"id":"OLD-052","category":"古人情話","speaker":"白色肚子的虎斑貓","prefix":"我喜歡在陽光下曬肚子，","answer":"也喜歡在你面前露肚子，因為你就是我的太陽","accepted":["也喜歡在你面前露肚子，因為你就是我的太陽","也喜歡在妳面前露肚子，因為妳就是我的太陽"],"near":["也喜歡在你面前露肚子，因為你就是我的太陽"],"semantic":[],"mechanism":"類比、隱喻｜特徵轉化型","difficulty":"挑戰","sourceTab":"古人情話","sourceRow":"53"},
+        {"id":"OLD-053","category":"古人情話","speaker":"挑嘴的藍貓","prefix":"我只喜歡，你為我細心挑選的食物，","answer":"謝謝你把我寵成世上最幸福的貓貓","accepted":["謝謝你把我寵成世上最幸福的貓貓","謝謝妳把我寵成世上最幸福的貓貓"],"near":["謝謝你把我寵成世上最幸福的貓貓"],"semantic":[],"mechanism":"限定、感謝｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"54"},
+        {"id":"OLD-054","category":"古人情話","speaker":"野性的虎斑貓","prefix":"你不懂覓食也沒關係的，","answer":"我會照顧你的，送你新鮮的老鼠和小強","accepted":["我會照顧你的，送你新鮮的老鼠和小強","我會照顧妳的，送妳新鮮的老鼠和小強"],"near":["我會照顧你的，送你新鮮的老鼠和小強"],"semantic":[],"mechanism":"反差、照顧承諾｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"55"},
+        {"id":"OLD-055","category":"古人情話","speaker":"全體貓貓","prefix":"沒關係的，有我們在，","answer":"我們在等著你回家","accepted":["我們在等著你回家","我們在等著妳回家"],"near":["我們在等著你回家"],"semantic":[],"mechanism":"安慰、陪伴承諾｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"56"},
+        {"id":"OLD-056","category":"古人情話","speaker":"鍾理和","prefix":"我愛台妹，","answer":"台妹愛我","accepted":["台妹愛我"],"near":["台妹愛我"],"semantic":[],"mechanism":"回環、對稱｜語義雙關型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"57"},
+        {"id":"OLD-066","category":"古人情話","speaker":"說書人","prefix":"我說的不是故事，","answer":"是我們相愛的未來","accepted":["是我們相愛的未來"],"near":["是我們相愛的未來"],"semantic":[],"mechanism":"否定翻轉、未來想像｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"67"},
+        {"id":"OLD-067","category":"古人情話","speaker":"阿瓦隆","prefix":"我想和你出任務，","answer":"因為你是我最堅強的後盾，我只相信你","accepted":["因為你是我最堅強的後盾，我只相信你","因為妳是我最堅強的後盾，我只相信妳"],"near":["因為你是我最堅強的後盾，我只相信你"],"semantic":[],"mechanism":"遊戲術語轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"68"},
+        {"id":"OLD-068","category":"古人情話","speaker":"偵探筆記","prefix":"最難解的謎題是，為何，","answer":"我一天比一天還愛你","accepted":["我一天比一天還愛你","我一天比一天還愛妳"],"near":["我一天比一天還愛你"],"semantic":[],"mechanism":"設問、謎題隱喻｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"69"},
+        {"id":"OLD-069","category":"古人情話","speaker":"傳情畫意","prefix":"傳給你我的愛情，","answer":"畫給你我的心意","accepted":["畫給你我的心意","畫給妳我的心意"],"near":["畫給你我的心意"],"semantic":[],"mechanism":"名稱拆解、對偶｜語義雙關型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"70"},
+        {"id":"OLD-071","category":"古人情話","speaker":"猜心俱樂部","prefix":"我想知道，","answer":"我有沒有在你最重要的六個名單之內","accepted":["我有沒有在你最重要的六個名單之內","我有沒有在妳最重要的六個名單之內"],"near":["我有沒有在你最重要的六個名單之內"],"semantic":[],"mechanism":"遊戲規則轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"72"},
+        {"id":"OLD-072","category":"古人情話","speaker":"偏頭痛曹操","prefix":"你知道華陀為什麼要幫我開腦嗎？","answer":"因為我受不了，你一直在我腦海裡徘徊","accepted":["因為我受不了，你一直在我腦海裡徘徊","因為我受不了，妳一直在我腦海裡徘徊"],"near":["因為我受不了，你一直在我腦海裡徘徊"],"semantic":[],"mechanism":"設問、誇飾｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"73"},
+        {"id":"OLD-074","category":"古人情話","speaker":"張飛","prefix":"對酒，我千杯不醉 對你，","answer":"我看一眼就醺","accepted":["我看一眼就醺"],"near":["我看一眼就醺"],"semantic":[],"mechanism":"對比、誇飾｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"75"},
+        {"id":"OLD-075","category":"古人情話","speaker":"有點M的黃蓋","prefix":"苦肉計再苦，","answer":"也沒有妳離開我的苦","accepted":["也沒有妳離開我的苦","也沒有你離開我的苦"],"near":["也沒有妳離開我的苦"],"semantic":[],"mechanism":"語義雙關、典故轉義｜語義雙關型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"76"},
+        {"id":"OLD-076","category":"古人情話","speaker":"癡情der劉禪","prefix":"我成為扶不起的阿斗，","answer":"只是因為愛你愛得太沉重","accepted":["只是因為愛你愛得太沉重","只是因為愛妳愛得太沉重"],"near":["只是因為愛你愛得太沉重"],"semantic":[],"mechanism":"典故改寫、因果反轉｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"77"},
+        {"id":"OLD-077","category":"古人情話","speaker":"草鞋愛好者劉備","prefix":"我編織堅固的草鞋，","answer":"只為走進你滿地荊棘的心","accepted":["只為走進你滿地荊棘的心","只為走進妳滿地荊棘的心"],"near":["只為走進你滿地荊棘的心"],"semantic":[],"mechanism":"象徵、功能轉義｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"78"},
+        {"id":"OLD-078","category":"古人情話","speaker":"華陀","prefix":"我嚐百草解百毒，","answer":"卻只解不掉愛你的病入膏肓","accepted":["卻只解不掉愛你的病入膏肓","卻只解不掉愛妳的病入膏肓"],"near":["卻只解不掉愛你的病入膏肓"],"semantic":[],"mechanism":"醫學語彙轉義、對比｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"79"},
+        {"id":"OLD-079","category":"古人情話","speaker":"單眼夏侯惇","prefix":"射瞎我的眼不是箭，","answer":"是愛神邱比特","accepted":["是愛神邱比特"],"near":["是愛神邱比特"],"semantic":[],"mechanism":"典故置換、反轉｜反差翻轉型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"80"},
+        {"id":"OLD-082","category":"古人情話","speaker":"原來是醬子的葛亮","prefix":"跟曹操借的十萬支箭，","answer":"都比不上你射中我心的那隻","accepted":["都比不上你射中我心的那隻","都比不上妳射中我心的那隻"],"near":["都比不上你射中我心的那隻"],"semantic":[],"mechanism":"典故轉義、誇飾｜特徵轉化型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"83"},
+        {"id":"OLD-083","category":"古人情話","speaker":"人中出呂布","prefix":"千軍萬馬在前我無所畏懼，","answer":"惹你生氣我瞬間學貓喵喵喵　喵","accepted":["惹你生氣我瞬間學貓喵喵喵　喵","惹妳生氣我瞬間學貓喵喵喵　喵"],"near":["惹你生氣我瞬間學貓喵喵喵　喵"],"semantic":[],"mechanism":"英雄反差、擬聲｜反差翻轉型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"84"},
+        {"id":"OLD-084","category":"古人情話","speaker":"帕夫洛夫","prefix":"沒有條件，","answer":"我就已經被妳制約","accepted":["我就已經被妳制約","我就已經被你制約"],"near":["我就已經被妳制約"],"semantic":[],"mechanism":"科學術語雙關｜專業術語型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"85"},
+        {"id":"OLD-085","category":"古人情話","speaker":"虎克","prefix":"大家都以細胞為單位，","answer":"但妳卻是我唯一的一位","accepted":["但妳卻是我唯一的一位","但你卻是我唯一的一位"],"near":["但妳卻是我唯一的一位"],"semantic":[],"mechanism":"量詞雙關、科學語彙｜語義雙關型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"86"},
+        {"id":"OLD-086","category":"古人情話","speaker":"林奈","prefix":"在我的世界裡，","answer":"妳的名字是唯一的學名","accepted":["妳的名字是唯一的學名","你的名字是唯一的學名"],"near":["妳的名字是唯一的學名"],"semantic":[],"mechanism":"分類學術語轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"87"},
+        {"id":"OLD-087","category":"古人情話","speaker":"卡爾文","prefix":"我不停循環，","answer":"只為了甜滿妳","accepted":["只為了甜滿妳","只為了甜滿你"],"near":["只為了甜滿妳"],"semantic":[],"mechanism":"循環術語雙關｜專業術語型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"88"},
+        {"id":"OLD-088","category":"古人情話","speaker":"岡崎令治","prefix":"就算裂成再多片段，","answer":"妳都能讓我變得完整","accepted":["妳都能讓我變得完整","你都能讓我變得完整"],"near":["妳都能讓我變得完整"],"semantic":[],"mechanism":"科學術語轉義、對比｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"89"},
+        {"id":"OLD-089","category":"古人情話","speaker":"莫甘","prefix":"我的基因，","answer":"只願和妳聯會後互換","accepted":["只願和妳聯會後互換","只願和你聯會後互換"],"near":["只願和妳聯會後互換"],"semantic":[],"mechanism":"遺傳學術語轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"90"},
+        {"id":"OLD-091","category":"古人情話","speaker":"佛萊明","prefix":"再大的抑制圈，","answer":"都隔絕不了我對妳的愛","accepted":["都隔絕不了我對妳的愛","都隔絕不了我對你的愛"],"near":["都隔絕不了我對妳的愛"],"semantic":[],"mechanism":"微生物術語轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"92"},
+        {"id":"OLD-092","category":"古人情話","speaker":"法布爾","prefix":"寫滿在我觀察日記的，","answer":"其實都是妳","accepted":["其實都是妳","其實都是你"],"near":["其實都是妳"],"semantic":[],"mechanism":"職業語彙轉義｜專業術語型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"93"},
+        {"id":"OLD-093","category":"古人情話","speaker":"勞倫茲","prefix":"對妳的依戀，","answer":"就像印痕一樣","accepted":["就像印痕一樣"],"near":["就像印痕一樣"],"semantic":[],"mechanism":"動物行為術語類比｜專業術語型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"94"},
+        {"id":"OLD-095","category":"古人情話","speaker":"達爾文","prefix":"天選擇了我，","answer":"而我選擇了你","accepted":["而我選擇了你","而我選擇了妳"],"near":["而我選擇了你"],"semantic":[],"mechanism":"選擇雙關、對比｜語義雙關型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"96"},
+        {"id":"OLD-096","category":"古人情話","speaker":"薛丁格","prefix":"你無處不在，","answer":"我與你一起生死與共","accepted":["我與你一起生死與共","我與妳一起生死與共"],"near":["我與你一起生死與共"],"semantic":[],"mechanism":"科學概念轉義｜專業術語型","difficulty":"普通","sourceTab":"古人情話","sourceRow":"97"},
+        {"id":"OLD-098","category":"古人情話","speaker":"海森堡","prefix":"我找不到我的心在哪裡，","answer":"因為我對妳心動了","accepted":["因為我對妳心動了","因為我對你心動了"],"near":["因為我對妳心動了"],"semantic":[],"mechanism":"不確定性雙關｜專業術語型","difficulty":"簡單","sourceTab":"古人情話","sourceRow":"99"}
       ],
       replies: {
         first: 'Baby，你就是我今日的命定之人！這一句，終於被你接住了。',
@@ -785,7 +867,7 @@
     }));
 
     // 第二版課堂遊戲：每位學生有獨立題序、兩次機會、積分與詩人卡。
-    const GAME_VERSION = 3;
+    const GAME_VERSION = 4;
     const TARGET_CORRECT = 8;
     const deviceSalt = localStorage.getItem('poetryDeviceSalt') || crypto.randomUUID();
     localStorage.setItem('poetryDeviceSalt', deviceSalt);
@@ -807,23 +889,53 @@
         return ((value ^ value >>> 14) >>> 0) / 4294967296;
       };
     }
-    function shuffledQuestionIds(user) {
-      const ids = DATA.questions.map(question => question.id);
-      const random = seededRandom(hashSeed(`${user}|${deviceSalt}|poetry-v3`));
-      for (let i = ids.length - 1; i > 0; i -= 1) {
+    const DOMAIN_ORDER = ['名人情話', '人體器官', '蔬果食物', '科技軟體', '古人情話'];
+    function shuffledCopy(items, seedText) {
+      const list = [...items];
+      const random = seededRandom(hashSeed(seedText));
+      for (let i = list.length - 1; i > 0; i -= 1) {
         const j = Math.floor(random() * (i + 1));
-        [ids[i], ids[j]] = [ids[j], ids[i]];
+        [list[i], list[j]] = [list[j], list[i]];
       }
-      return ids;
+      return list;
+    }
+    function shuffledQuestionIds(user, roundSeed = '') {
+      const cohort = Math.floor(Date.now() / 120000);
+      const slot = hashSeed(`${user}|${deviceSalt}|${roundSeed}`) % 4;
+      const pools = Object.fromEntries(DOMAIN_ORDER.map(category => [
+        category,
+        shuffledCopy(DATA.questions.filter(question => question.category === category).map(question => question.id), `${cohort}|${category}|shared-pool-v4`)
+      ]));
+      const chosen = [];
+      const take = (category, offset) => {
+        const pool = pools[category] || [];
+        if (!pool.length) return;
+        for (let step = 0; step < pool.length; step += 1) {
+          const id = pool[(offset + step) % pool.length];
+          if (!chosen.includes(id)) { chosen.push(id); return; }
+        }
+      };
+      DOMAIN_ORDER.forEach((category, index) => take(category, slot + index * 4));
+      for (let extra = 0; extra < 3; extra += 1) {
+        const category = DOMAIN_ORDER[(slot * 2 + extra) % DOMAIN_ORDER.length];
+        take(category, 20 + slot + extra * 4);
+      }
+      const leading = shuffledCopy(chosen, `${user}|${roundSeed}|leading-v4`);
+      const remaining = shuffledCopy(
+        DATA.questions.map(question => question.id).filter(id => !chosen.includes(id)),
+        `${user}|${deviceSalt}|${roundSeed}|remaining-v4`
+      );
+      return [...leading, ...remaining];
     }
     function gameKey() { return `poetryGameV${GAME_VERSION}:${normalize(currentUser || 'guest')}`; }
     function newGamePost(qid) {
       return { qid, attempts: 0, done: false, correct: false, answers: [], feedback: '', feedbackType: '', comments: [], bonusAwarded: false };
     }
     function createGameState() {
-      const order = shuffledQuestionIds(currentUser);
+      const roundSeed = `${Date.now()}-${crypto.randomUUID()}`;
+      const order = shuffledQuestionIds(currentUser, roundSeed);
       return {
-        version: GAME_VERSION, order, cursor: 0, correct: 0, score: 0,
+        version: GAME_VERSION, roundSeed, order, cursor: 0, correct: 0, score: 0,
         firstCorrect: 0, secondCorrect: 0, commentPoints: 0,
         categoryCounts: {}, completedIds: [], missedIds: [], cardUnlocked: false,
         posts: [newGamePost(order[0])]
@@ -1170,7 +1282,7 @@
       ctx.save(); ctx.translate(705,1023); ctx.rotate(-7 * Math.PI / 180);
       ctx.fillStyle = '#ffedbf'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(5,26,38,.75)'; ctx.shadowBlur = 7; ctx.font = '900 27px sans-serif'; ctx.fillText('志摩北鼻',0,-3); ctx.font = '800 18px sans-serif'; ctx.fillText('浪漫認證',0,25); ctx.restore();
       ctx.fillStyle = '#fff6df'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(5,26,38,.7)'; ctx.shadowBlur = 5; ctx.font = '700 18px sans-serif'; ctx.fillText(date,705,1083); ctx.shadowBlur = 0;
-      ctx.fillStyle = '#fff3dc'; ctx.textAlign = 'left'; ctx.font = '23px sans-serif'; ctx.fillText('徐志摩的情聖粉絲專頁・教學角色模擬',60,1125);
+      ctx.fillStyle = '#fff3dc'; ctx.textAlign = 'left'; ctx.font = '23px sans-serif'; ctx.fillText('志摩的柔波區・教學角色模擬',60,1125);
       const link = document.createElement('a'); link.download = `${name}-${title.primary}-詩人卡-直式新版.png`; link.href = canvas.toDataURL('image/png'); link.click();
     });
 
