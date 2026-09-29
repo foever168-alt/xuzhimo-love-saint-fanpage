@@ -278,6 +278,8 @@
     .card-rarity { color: #ffd991; font-weight: 900; letter-spacing: .12em; }
     .card-date { margin-top: 4px; color: #fff6df; font-size: 11px; font-weight: 800; letter-spacing: .03em; text-shadow: 0 1px 5px rgba(5,26,38,.6); }
     .card-love-note { position: relative; z-index: 1; margin-top: 12px; color: #ffe9bd; font-family: "Noto Serif TC", serif; font-size: 14px; letter-spacing: .12em; }
+    .card-overflow-note { position: absolute; z-index: 3; right: 28px; top: 178px; color: #fff; font: 800 21px/1.1 "Segoe Print", "Comic Sans MS", cursive; letter-spacing: .04em; text-shadow: 0 2px 8px rgba(7,26,38,.72); transform: rotate(-8deg); }
+    .card-overflow-note[hidden] { display: none; }
     .card-charms { position: relative; z-index: 1; margin: 7px 0 2px; color: #ffe0a2; font-size: 19px; letter-spacing: .34em; }
     .poet-card h2 { position: relative; z-index: 1; margin: 3px 0 0; font-family: "Noto Serif TC", Georgia, serif; font-size: 40px; text-shadow: 0 2px 12px rgba(48,20,40,.22); }
     .poet-card h3 { position: relative; z-index: 1; margin: 0 0 18px; color: #ffe3a8; font-size: 23px; }
@@ -393,6 +395,7 @@
       .poet-card::before { right: 24px; top: 56px; font-size: 108px; }
       .poet-card h2 { font-size: clamp(31px, 10vw, 38px); }
       .poet-card h3 { margin-bottom: 13px; font-size: 21px; }
+      .card-overflow-note { right: 17px; top: 164px; font-size: 18px; }
       .card-love-note { letter-spacing: .06em; }
       .card-dialogue { padding: 12px 13px; font-size: 14px; }
       .card-stats { gap: 5px; margin: 13px 0; }
@@ -604,6 +607,7 @@
     <section class="poet-card-modal">
       <div class="poet-card" id="poetCardVisual">
         <div class="card-topline"><div class="card-rarity" id="cardRarity">SSR・POET CARD</div></div>
+        <div class="card-overflow-note" id="cardOverflowNote" hidden>浪漫爆表!!</div>
         <div class="card-love-note">一封來自康橋的浪漫認證</div>
         <div class="card-charms" aria-hidden="true">♡ ✦ ☾ ♡</div>
         <h2 id="cardDisplayName">小雲</h2>
@@ -618,7 +622,7 @@
         <div class="card-bottom"><div class="card-hidden">隱藏屬性：<strong id="cardHiddenTitle">康橋知音</strong></div><div class="card-seal"><img src="xuzhimo-avatar.jpg" alt="徐志摩認證頭像"><div class="card-seal-mark">志摩北鼻<small>浪漫認證</small></div><div class="card-date" id="cardDate">2026年9月28日</div></div></div>
       </div>
       <div class="card-name-edit"><label for="cardNameInput">詩人卡要寫哪個名字？</label><input id="cardNameInput" maxlength="16"></div>
-      <div class="card-actions"><button class="btn btn-soft" id="closePoetCard">稍後再看</button><button class="btn btn-primary" id="downloadPoetCard">下載直式新版詩人卡</button></div>
+      <div class="card-actions"><button class="btn btn-soft" id="closePoetCard">稍後再看</button><button class="btn btn-primary" id="downloadPoetCard">我的詩人卡</button></div>
     </section>
   </div>
 
@@ -1379,6 +1383,7 @@
       $('#cardDialogue').textContent = dialogues[title.primary];
       $('#cardCorrect').textContent = gameState.correct;
       $('#cardScore').textContent = gameState.score;
+      $('#cardOverflowNote').hidden = gameState.score <= 150;
       $('#cardComments').textContent = gameState.commentPoints;
       $('#cardHiddenTitle').textContent = title.hidden;
       $('#cardBadgeList').innerHTML = badgesForGame().filter(badge => badge.earned).map(badge => `<span class="card-badge">${badge.icon} ${badge.label}</span>`).join('');
@@ -1417,6 +1422,9 @@
       ctx.fillStyle = 'rgba(255,239,195,.15)'; ctx.font = '160px serif'; ctx.fillText('♡',650,250); ctx.fillText('☾',-8,1135);
       ctx.fillStyle = '#ffd991'; ctx.font = '700 28px sans-serif'; ctx.fillText(`${title.rarity}・POET CARD`,60,82);
       ctx.fillStyle = '#ffe9bd'; ctx.font = '700 21px serif'; ctx.fillText('一封來自康橋的浪漫認證　♡ ✦ ☾ ♡',60,132);
+      if (gameState.score > 150) {
+        ctx.save(); ctx.translate(700,178); ctx.rotate(-8 * Math.PI / 180); ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(7,26,38,.8)'; ctx.shadowBlur = 9; ctx.font = '800 29px "Segoe Print", "Comic Sans MS", cursive'; ctx.fillText('浪漫爆表!!',0,0); ctx.restore();
+      }
       ctx.fillStyle = '#fff7e6'; ctx.font = '700 62px serif'; ctx.fillText(name,60,220);
       ctx.fillStyle = '#ffe3a8'; ctx.font = '700 44px sans-serif'; ctx.fillText(title.primary,60,282);
       ctx.fillStyle = 'rgba(5,26,38,.42)'; ctx.fillRect(60,325,780,205);
