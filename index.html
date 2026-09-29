@@ -138,6 +138,8 @@
       box-shadow: 0 7px 22px rgba(28,54,62,.2);
     }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar[role="button"] { cursor: pointer; }
+    .avatar[role="button"]:focus-visible { outline: 4px solid #ffd991; outline-offset: 4px; }
     .online { position: absolute; right: 10px; bottom: 10px; width: 24px; height: 24px; border: 4px solid white; border-radius: 50%; background: #36bc6a; }
     .bio { padding-top: 24px; flex: 1; }
     .bio h1 { margin: 0; font-family: "Noto Serif TC", Georgia, serif; font-size: clamp(28px, 4vw, 38px); line-height: 1.2; }
@@ -321,6 +323,18 @@
     .login-content label { display: block; margin-bottom: 6px; font-weight: 800; }
     .login-content input { width: 100%; padding: 12px 14px; border: 1px solid #cad4d6; border-radius: 11px; outline: none; }
     .login-content .btn { width: 100%; margin-top: 13px; }
+    .admin-modal { width: min(520px, 100%); padding: 24px; background: var(--white); border-radius: 22px; box-shadow: 0 24px 80px rgba(0,0,0,.26); }
+    .admin-modal h2 { margin: 0 0 5px; font-family: "Noto Serif TC", serif; }
+    .admin-modal p { margin: 0 0 15px; color: var(--muted); }
+    .admin-modal input[type="password"] { width: 100%; padding: 12px 13px; border: 1px solid var(--line); border-radius: 10px; }
+    .admin-error { min-height: 23px; margin-top: 7px; color: #a64b45; font-weight: 800; }
+    .admin-player-list { display: grid; gap: 9px; max-height: 320px; margin: 14px 0; overflow-y: auto; }
+    .admin-player { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; padding: 11px; background: #f5f1ea; border-radius: 12px; }
+    .admin-player input { margin-top: 5px; transform: scale(1.2); }
+    .admin-player strong, .admin-player small { display: block; }
+    .admin-player small { color: var(--muted); line-height: 1.45; }
+    .admin-actions { display: flex; gap: 9px; }
+    .admin-actions .btn { flex: 1; }
     .leaderboard-modal { width: min(560px, 100%); overflow: hidden; background: var(--white); border-radius: 22px; box-shadow: 0 24px 80px rgba(0,0,0,.26); }
     .leaderboard-head { padding: 22px 24px 18px; display: flex; align-items: center; gap: 14px; color: white; background: linear-gradient(135deg, var(--brand-dark), #6a526c); }
     .leaderboard-head h2 { margin: 0; display: block; font: 800 25px/1.25 "Noto Serif TC", serif; }
@@ -458,7 +472,7 @@
         <div class="cover-note">康橋的風，今晚也在等一句回音。</div>
       </div>
       <div class="identity">
-        <div class="avatar"><img src="xuzhimo-avatar.jpg" alt="徐志摩插畫頭像"><i class="online" aria-label="在線"></i></div>
+        <div class="avatar" id="adminAvatar" role="button" tabindex="0" aria-label="開啟留言管理"><img src="xuzhimo-avatar.jpg" alt="徐志摩插畫頭像"><i class="online" aria-label="在線"></i></div>
         <div class="bio">
           <button class="handle studio-handle" id="studioLeaderboard" type="button" aria-haspopup="dialog">@Singcloud1121 工作室</button>
           <h1>志摩的柔波區</h1>
@@ -599,6 +613,24 @@
       </form>
     </section>
   </div>
+  <div class="modal-backdrop" id="adminBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="adminHeading">
+    <section class="admin-modal">
+      <form id="adminAuthForm">
+        <h2 id="adminHeading">志摩留言管理</h2>
+        <p>請輸入管理密碼。密碼只會在這個視窗中驗證，不會寫進 GitHub 網頁。</p>
+        <label for="adminPassword">管理密碼</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" required>
+        <div class="admin-error" id="adminError" role="status"></div>
+        <div class="admin-actions"><button class="btn btn-soft" id="adminCancel" type="button">取消</button><button class="btn btn-primary" type="submit">驗證</button></div>
+      </form>
+      <section id="adminDecision" hidden>
+        <h2>小云，是否清除留言？</h2>
+        <p>勾選本日要清除的玩家；選「否」會保留全部留言。</p>
+        <div class="admin-player-list" id="adminPlayerList"></div>
+        <div class="admin-actions"><button class="btn btn-soft" id="adminKeep" type="button">否，保留</button><button class="btn btn-primary" id="adminClear" type="button">是，清除所選玩家</button></div>
+      </section>
+    </section>
+  </div>
   <div class="toast" id="toast" role="status"></div>
 
   <div class="modal-backdrop" id="leaderboardBackdrop" hidden role="dialog" aria-modal="true" aria-labelledby="leaderboardHeading">
@@ -663,7 +695,8 @@
     let attemptCount = 0;
     let questionIndex = Number(localStorage.getItem('poetryQuestionIndex') || 0) % DATA.questions.length;
     let questionBankVersion = 'embedded';
-    let guestComments = JSON.parse(localStorage.getItem('guestPostComments') || '[]');
+    let guestComments = [];
+    localStorage.removeItem('guestPostComments');
 
     function currentQuestion() { return DATA.questions[questionIndex]; }
     function renderQuestion() {
@@ -824,6 +857,11 @@
       }
       $('#guestCommentCount').textContent = String(6 + guestComments.length);
     }
+    async function loadTodayGuestComments() {
+      const payload = await gameApi('guest_comments_today');
+      guestComments = Array.isArray(payload.comments) ? payload.comments : [];
+      renderGuestComments();
+    }
     function updateLoginState() {
       $('#loginButton').textContent = currentUser ? `♡ ${currentUser}` : '♡ 訪客登入';
       $('#answerRule').textContent = currentUser ? `${currentUser}，接出下半句吧；標點與空格不影響判定。` : '登入後即可留言；標點與空格不影響判定。';
@@ -914,14 +952,8 @@
       try {
         const payload = await gameApi('guest_comment', { session: gameState.sessionId, event: crypto.randomUUID(), text });
         applyServerPayload(payload);
-        guestComments.push({
-          name: currentUser,
-          text,
-          time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
-        });
-        localStorage.setItem('guestPostComments', JSON.stringify(guestComments));
         input.value = '';
-        renderGuestComments();
+        await loadTodayGuestComments();
         showToast('留言成功，已加入客座貼文。');
       } catch (error) {
         showToast('留言沒有送到康橋，請稍後再試。');
@@ -1315,6 +1347,83 @@
         document.head.append(script);
       });
     }
+    const adminBackdrop = $('#adminBackdrop');
+    let adminAuthHash = '';
+    async function hashAdminPassword(password) {
+      const bytes = new TextEncoder().encode(`xuzhimo-admin-v1:${password}`);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest), value => value.toString(16).padStart(2, '0')).join('');
+    }
+    function closeAdminPanel() {
+      adminBackdrop.hidden = true;
+      adminAuthHash = '';
+      $('#adminPassword').value = '';
+      $('#adminError').textContent = '';
+    }
+    function renderAdminPlayers(comments) {
+      const groups = {};
+      (comments || []).forEach(comment => {
+        const key = comment.name || '未署名';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(comment);
+      });
+      const entries = Object.entries(groups);
+      $('#adminPlayerList').innerHTML = entries.length ? entries.map(([name, items]) => {
+        const ids = items.map(item => item.id).join(',');
+        const previews = items.map(item => `${escapeHtml(item.time)}　${escapeHtml(item.text)}`).join('<br>');
+        return `<label class="admin-player"><input type="checkbox" data-comment-ids="${escapeHtml(ids)}"><span><strong>${escapeHtml(name)}（${items.length} 則）</strong><small>${previews}</small></span></label>`;
+      }).join('') : '<div class="leaderboard-empty">今天還沒有玩家留言。</div>';
+      $('#adminClear').disabled = entries.length === 0;
+    }
+    function openAdminPanel() {
+      adminAuthHash = '';
+      $('#adminAuthForm').hidden = false;
+      $('#adminDecision').hidden = true;
+      $('#adminPassword').value = '';
+      $('#adminError').textContent = '';
+      adminBackdrop.hidden = false;
+      requestAnimationFrame(() => $('#adminPassword').focus());
+    }
+    $('#adminAvatar').addEventListener('click', openAdminPanel);
+    $('#adminAvatar').addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openAdminPanel(); } });
+    $('#adminCancel').addEventListener('click', closeAdminPanel);
+    $('#adminKeep').addEventListener('click', closeAdminPanel);
+    adminBackdrop.addEventListener('click', event => { if (event.target === adminBackdrop) closeAdminPanel(); });
+    $('#adminAuthForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = event.submitter;
+      button.disabled = true;
+      $('#adminError').textContent = '';
+      try {
+        adminAuthHash = await hashAdminPassword($('#adminPassword').value);
+        const payload = await gameApi('admin_comments', { auth:adminAuthHash });
+        renderAdminPlayers(payload.comments || []);
+        $('#adminAuthForm').hidden = true;
+        $('#adminDecision').hidden = false;
+      } catch (error) {
+        adminAuthHash = '';
+        $('#adminError').textContent = '密碼不正確，請再試一次。';
+      } finally {
+        button.disabled = false;
+      }
+    });
+    $('#adminClear').addEventListener('click', async event => {
+      const selected = Array.from($('#adminPlayerList').querySelectorAll('input:checked'));
+      const ids = selected.flatMap(input => input.dataset.commentIds.split(',')).filter(Boolean);
+      if (!ids.length) { showToast('請先勾選要清除的玩家。'); return; }
+      event.currentTarget.disabled = true;
+      try {
+        const payload = await gameApi('admin_clear_comments', { auth:adminAuthHash, ids:ids.join(',') });
+        renderAdminPlayers(payload.comments || []);
+        await loadTodayGuestComments();
+        showToast(`已清除所選玩家的 ${payload.cleared || ids.length} 則留言。`);
+      } catch (error) {
+        showToast('清除失敗，請重新驗證管理密碼。');
+        closeAdminPanel();
+      } finally {
+        event.currentTarget.disabled = false;
+      }
+    });
     function applyServerPayload(payload, scrollToLast = false) {
       if (!payload?.state || !Array.isArray(payload.state.posts)) throw new Error('後端遊戲資料格式錯誤');
       gameState = payload.state;
@@ -1502,6 +1611,7 @@
       renderGuestLike();
       renderGuestComments();
       await initPoetryGame();
+      try { await loadTodayGuestComments(); } catch (error) { guestComments = []; renderGuestComments(); }
       if (currentUser) modal.hidden = true;
     }
     bootstrap();
