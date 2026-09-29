@@ -185,6 +185,7 @@
     .badge.locked { opacity: .38; filter: grayscale(1); }
     .badge.earned { color: #174e42; background: #edf8f3; border-color: #bfe2d3; box-shadow: 0 5px 14px rgba(31,108,91,.1); }
     .feed { display: grid; gap: 16px; }
+    #guestPost { order: -1; }
     .composer { padding: 15px 18px; }
     .composer-row { display: flex; gap: 12px; align-items: center; }
     .mini-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
@@ -367,6 +368,7 @@
       .card { border-radius: 13px; }
       .composer { display: none; }
       .feed, .game-feed { gap: 12px; }
+      .feed { padding-bottom: 120px; }
       .game-status { position: sticky; top: 68px; z-index: 18; padding: 13px 15px; box-shadow: 0 8px 24px rgba(24,52,62,.13); }
       #gameStatus { scroll-margin-top: 68px; }
       .game-status h2 { font-size: 17px; }
@@ -557,12 +559,16 @@
         <section class="guest-comment-section" aria-label="錢鍾書客座貼文留言區">
           <div class="guest-comments" id="guestComments">
             <div class="comment"><span class="comment-face">🌿</span><div class="bubble"><strong>張幼儀 <span class="comment-time">昨天</span></strong>你比老徐專情！</div></div>
+            <div class="comment-reaction">😡 徐志摩按怒</div>
             <div class="comment"><span class="comment-face">☁️</span><div class="bubble"><strong>林徽音 <span class="comment-time">昨天</span></strong>我愛你，與你無關。</div></div>
+            <div class="comment-reaction">😢 徐志摩按哭</div>
             <div class="comment"><span class="comment-face">🌹</span><div class="bubble"><strong>你的曼 <span class="comment-time">昨天</span></strong>我就是留言終結者......</div></div>
+            <div class="comment-reaction">❤️ 徐志摩按愛心</div>
             <div class="comment"><span class="comment-face">📖</span><div class="bubble"><strong>張愛玲 <span class="comment-time">昨天</span></strong>二樓姐姐抄襲！</div></div>
             <div class="comment"><span class="comment-face">🏰</span><div class="bubble"><strong>錢鍾書 <span class="comment-time">昨天</span></strong>城外的人想衝進去，城內的人想逃出來。想買我的《圍城》樓下＋1。</div></div>
             <div class="comment-reaction">👍 胡蘭成按讚錢鍾書</div>
             <div class="comment"><span class="comment-face">👍</span><div class="bubble"><strong>胡蘭成 <span class="comment-time">昨天</span></strong>＋1</div></div>
+            <div class="comment-reaction">👍 徐志摩按讚</div>
           </div>
           <form class="answer-form" id="guestCommentForm">
             <input id="guestCommentInput" maxlength="120" autocomplete="off" placeholder="回應這句客座情話…" aria-label="留言回應錢鍾書客座情話">
@@ -798,6 +804,17 @@
       if (!LEADERBOARD_API_URL.startsWith('https://script.google.com/')) return;
       fetch(LEADERBOARD_API_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(entry), keepalive:true }).catch(() => {});
     }
+    function logPlayerComment(details) {
+      if (!currentUser || /^(測試|手機測試)/.test(currentUser)) return;
+      const payload = {
+        action:'comment', eventId:crypto.randomUUID(), name:currentUser,
+        questionId:String(details.questionId || ''), speaker:String(details.speaker || ''),
+        category:String(details.category || ''), prompt:String(details.prompt || ''),
+        text:String(details.text || ''), location:String(details.location || '挑戰貼文'),
+        bankVersion:questionBankVersion
+      };
+      fetch(LEADERBOARD_API_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload), keepalive:true }).catch(() => {});
+    }
     function fetchRemoteLeaderboard() {
       if (!LEADERBOARD_API_URL.startsWith('https://script.google.com/')) return Promise.reject(new Error('排行榜尚未連線'));
       return new Promise((resolve,reject) => {
@@ -977,6 +994,7 @@
         time: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
       });
       localStorage.setItem('guestPostComments', JSON.stringify(guestComments));
+      logPlayerComment({ questionId:'GUEST-QIAN-001', speaker:'錢鍾書', category:'名人情話', prompt:'沒遇到你之前，我沒想過結婚；遇見你，結婚這事我沒想過和別人。', text, location:'錢鍾書客座貼文' });
       input.value = '';
       renderGuestComments();
       showToast('留言成功，已加入客座貼文。');
@@ -1322,6 +1340,8 @@
       const value = input.value.trim();
       if (value.length < 4) { showToast('至少留下 4 個字，才算一則有效回音。'); return; }
       post.comments.push({ name:currentUser, text:value, time:new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}) });
+      const question = questionById(post.qid);
+      logPlayerComment({ questionId:question.id, speaker:question.speaker, category:question.category, prompt:question.prefix, text:value, location:'挑戰貼文' });
       gameState.commentPoints += 1;
       gameState.score += 1;
       showToast('有效回音，浪漫值＋1。');
