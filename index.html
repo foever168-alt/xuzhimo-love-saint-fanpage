@@ -7,6 +7,8 @@
   <meta name="description" content="徐志摩說上半句，粉絲用語意接近的情話接出下半句，成為課堂裡的趣味情聖。">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='16' width='64' height='64' fill='%232f5f73'/%3E%3Cpath d='M15 43c13-2 23-12 34-28-2 17-11 30-29 34z' fill='%23fff4dd'/%3E%3C/svg%3E">
   <style>
+    /* 芫荽體（SIL OFL 1.1）：https://github.com/ButTaiwan/iansui */
+    @import url("https://cdn.jsdelivr.net/npm/@hanzi.pro/webfonts-iansui@0.2.0/swap/400.css");
     :root {
       --ink: #173240;
       --muted: #6f7c82;
@@ -278,13 +280,16 @@
     .card-rarity { color: #ffd991; font-weight: 900; letter-spacing: .12em; }
     .card-date { margin-top: 4px; color: #fff6df; font-size: 11px; font-weight: 800; letter-spacing: .03em; text-shadow: 0 1px 5px rgba(5,26,38,.6); }
     .card-love-note { position: relative; z-index: 1; margin-top: 12px; color: #ffe9bd; font-family: "Noto Serif TC", serif; font-size: 14px; letter-spacing: .12em; }
-    .card-overflow-note { position: absolute; z-index: 3; right: 28px; top: 178px; color: #fff; font: 800 21px/1.1 "Segoe Print", "Comic Sans MS", cursive; letter-spacing: .04em; text-shadow: 0 2px 8px rgba(7,26,38,.72); transform: rotate(-8deg); }
+    .card-overflow-note { position: absolute; z-index: 4; inset: -76px -8px -14px; pointer-events: none; color: #fff; font: 400 25px/1.1 "Iansui", "DFKai-SB", cursive; letter-spacing: .04em; text-shadow: 0 2px 8px rgba(7,26,38,.72); }
+    .card-overflow-note svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 2px 4px rgba(7,26,38,.55)); }
+    .card-overflow-note path, .card-overflow-note ellipse { fill: none; stroke: rgba(255,255,255,.95); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    .card-overflow-note span { position: absolute; right: 3px; top: 4px; transform: rotate(-7deg); white-space: nowrap; }
     .card-overflow-note[hidden] { display: none; }
     .card-charms { position: relative; z-index: 1; margin: 7px 0 2px; color: #ffe0a2; font-size: 19px; letter-spacing: .34em; }
     .poet-card h2 { position: relative; z-index: 1; margin: 3px 0 0; font-family: "Noto Serif TC", Georgia, serif; font-size: 40px; text-shadow: 0 2px 12px rgba(48,20,40,.22); }
     .poet-card h3 { position: relative; z-index: 1; margin: 0 0 18px; color: #ffe3a8; font-size: 23px; }
     .card-dialogue { position: relative; z-index: 1; padding: 15px 17px; background: rgba(5,26,38,.38); border: 1px solid rgba(255,241,210,.18); border-radius: 16px; line-height: 1.75; }
-    .card-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 18px 0; }
+    .card-stats { position: relative; display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 18px 0; }
     .card-stat { position: relative; z-index: 1; padding: 9px; text-align: center; background: rgba(255,248,245,.13); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
     .card-stat strong { display: block; font-size: 22px; }
     .card-badges { position: relative; z-index: 1; margin: 0 0 18px; }
@@ -395,7 +400,7 @@
       .poet-card::before { right: 24px; top: 56px; font-size: 108px; }
       .poet-card h2 { font-size: clamp(31px, 10vw, 38px); }
       .poet-card h3 { margin-bottom: 13px; font-size: 21px; }
-      .card-overflow-note { right: 17px; top: 164px; font-size: 18px; }
+      .card-overflow-note { inset: -66px -4px -10px; font-size: 20px; }
       .card-love-note { letter-spacing: .06em; }
       .card-dialogue { padding: 12px 13px; font-size: 14px; }
       .card-stats { gap: 5px; margin: 13px 0; }
@@ -485,7 +490,7 @@
       </section>
       <section class="card panel">
         <h2>我的情話進度</h2>
-        <div class="game-status-head"><span>答對 <strong id="sideCorrect">0</strong>／8 題</span><span class="score-pill"><b id="sideScore">0</b> 分</span></div>
+        <div class="game-status-head"><span>完成 <strong id="sideCorrect">0</strong>／8 題</span><span class="score-pill"><b id="sideScore">0</b> 分</span></div>
         <div class="progress-track"><div class="progress-fill" id="sideProgress"></div></div>
         <div class="progress-meta"><span>留言積分 <b id="sideComments">0</b></span><span id="sideTitle">情話新手</span></div>
         <button class="btn btn-primary open-card" id="openPoetCard">查看我的詩人卡</button>
@@ -509,7 +514,7 @@
       <section class="card game-status" id="gameStatus">
         <div class="game-status-head"><h2>情話接句進行中</h2><span class="score-pill"><b id="gameScore">0</b> 分</span></div>
         <div class="progress-track"><div class="progress-fill" id="gameProgress"></div></div>
-        <div class="progress-meta"><span>答對 <b id="gameCorrect">0</b>／8 題</span><span>每題最多兩次機會</span></div>
+        <div class="progress-meta"><span>答對 <b id="gameCorrect">0</b> 題</span><span>全程固定 8 題</span></div>
       </section>
       <div class="game-feed" id="gameFeed"></div>
 
@@ -607,7 +612,6 @@
     <section class="poet-card-modal">
       <div class="poet-card" id="poetCardVisual">
         <div class="card-topline"><div class="card-rarity" id="cardRarity">SSR・POET CARD</div></div>
-        <div class="card-overflow-note" id="cardOverflowNote" hidden>浪漫爆表!!</div>
         <div class="card-love-note">一封來自康橋的浪漫認證</div>
         <div class="card-charms" aria-hidden="true">♡ ✦ ☾ ♡</div>
         <h2 id="cardDisplayName">小雲</h2>
@@ -617,6 +621,14 @@
           <div class="card-stat"><strong id="cardCorrect">8</strong>答對</div>
           <div class="card-stat"><strong id="cardScore">160</strong>浪漫值</div>
           <div class="card-stat"><strong id="cardComments">0</strong>回音</div>
+          <div class="card-overflow-note" id="cardOverflowNote" hidden aria-label="浪漫爆表手寫註記">
+            <svg viewBox="0 0 520 145" preserveAspectRatio="none" aria-hidden="true">
+              <ellipse cx="260" cy="111" rx="78" ry="30" transform="rotate(-4 260 111)"></ellipse>
+              <path d="M315 86 C350 46 397 28 455 34"></path>
+              <path d="M439 24 L455 34 L441 47"></path>
+            </svg>
+            <span>浪漫爆表!!</span>
+          </div>
         </div>
         <div class="card-badges"><div class="card-badges-label">本週獲得的情話徽章</div><div class="card-badges-list" id="cardBadgeList"></div></div>
         <div class="card-bottom"><div class="card-hidden">隱藏屬性：<strong id="cardHiddenTitle">康橋知音</strong></div><div class="card-seal"><img src="xuzhimo-avatar.jpg" alt="徐志摩認證頭像"><div class="card-seal-mark">志摩北鼻<small>浪漫認證</small></div><div class="card-date" id="cardDate">2026年9月28日</div></div></div>
@@ -835,7 +847,7 @@
       localStorage.setItem('poetryNickname', currentUser);
       modal.hidden = true;
       updateLoginState();
-      initPoetryGame();
+      initPoetryGame(true);
       showToast(`歡迎回來，${currentUser}。徐志摩正在等你的下半句。`);
       setTimeout(() => document.querySelector('.game-answer')?.focus(), 0);
     });
@@ -1170,13 +1182,15 @@
     }
     function updateGameStatus() {
       if (!gameState) return;
-      const percent = Math.min(100, gameState.correct / TARGET_CORRECT * 100);
+      const completed = Number(gameState.completed ?? gameState.posts?.filter(post => post.done).length ?? 0);
+      const percent = Math.min(100, completed / TARGET_CORRECT * 100);
       ['#gameScore','#sideScore'].forEach(selector => $(selector).textContent = gameState.score);
-      ['#gameCorrect','#sideCorrect'].forEach(selector => $(selector).textContent = gameState.correct);
+      $('#gameCorrect').textContent = gameState.correct;
+      $('#sideCorrect').textContent = completed;
       ['#gameProgress','#sideProgress'].forEach(selector => $(selector).style.width = `${percent}%`);
       $('#sideComments').textContent = gameState.commentPoints;
       $('#sideTitle').textContent = currentProvisionalTitle();
-      $('#openPoetCard').classList.toggle('show', gameState.correct >= TARGET_CORRECT);
+      $('#openPoetCard').classList.toggle('show', Boolean(gameState.cardUnlocked));
       updateBadgePanel();
     }
     function postMarkup(post, index) {
@@ -1337,7 +1351,7 @@
       try {
         const payload = await gameApi('game_submit', { session:gameState.sessionId, post:index, answer:value, event:crypto.randomUUID() });
         const finished = Boolean(payload.state.posts[index]?.done);
-        applyServerPayload(payload, finished && payload.state.correct < TARGET_CORRECT);
+        applyServerPayload(payload, finished && !payload.state.cardUnlocked);
         const seenKey = `poetryServerCardSeen:${payload.sessionId}`;
         if (payload.state.cardUnlocked && localStorage.getItem(seenKey) !== 'true') {
           localStorage.setItem(seenKey, 'true');
@@ -1386,7 +1400,7 @@
       return new Intl.DateTimeFormat('zh-TW', { year:'numeric', month:'long', day:'numeric' }).format(new Date());
     }
     function showPoetCard() {
-      if (!gameState || gameState.correct < TARGET_CORRECT) return;
+      if (!gameState || !gameState.cardUnlocked) return;
       const title = titleForGame();
       const dialogues = {
         '宇宙情人':'徐志摩：你從詩人的月色，一路浪漫到 Excel 的行列。世間萬物到了你的手中，都能變成情話。',
@@ -1434,7 +1448,7 @@
       const dialogue = $('#cardDialogue').textContent;
       const canvas = document.createElement('canvas'); canvas.width = 900; canvas.height = 1200;
       const ctx = canvas.getContext('2d');
-      const [cambridge, avatar] = await Promise.all([loadCardImage('cambridge-cover.jpg'), loadCardImage('xuzhimo-avatar.jpg')]);
+      const [cambridge, avatar] = await Promise.all([loadCardImage('cambridge-cover.jpg'), loadCardImage('xuzhimo-avatar.jpg'), document.fonts.load('40px Iansui', '浪漫爆表')]);
       drawImageCover(ctx,cambridge,0,0,900,1200);
       const gradient = ctx.createLinearGradient(0,0,900,1200); gradient.addColorStop(0,'rgba(18,53,72,.86)'); gradient.addColorStop(.58,'rgba(38,87,103,.76)'); gradient.addColorStop(1,'rgba(139,89,65,.7)');
       ctx.fillStyle = gradient; ctx.fillRect(0,0,900,1200);
@@ -1444,7 +1458,12 @@
       ctx.fillStyle = '#ffd991'; ctx.font = '700 28px sans-serif'; ctx.fillText(`${title.rarity}・POET CARD`,60,82);
       ctx.fillStyle = '#ffe9bd'; ctx.font = '700 21px serif'; ctx.fillText('一封來自康橋的浪漫認證　♡ ✦ ☾ ♡',60,132);
       if (gameState.score > 150) {
-        ctx.save(); ctx.translate(700,178); ctx.rotate(-8 * Math.PI / 180); ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(7,26,38,.8)'; ctx.shadowBlur = 9; ctx.font = '800 29px "Segoe Print", "Comic Sans MS", cursive'; ctx.fillText('浪漫爆表!!',0,0); ctx.restore();
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255,255,255,.96)'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.beginPath(); ctx.ellipse(440,625,118,55,-4 * Math.PI / 180,0,Math.PI*2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(520,580); ctx.bezierCurveTo(585,525,650,506,722,520); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(700,503); ctx.lineTo(722,520); ctx.lineTo(699,535); ctx.stroke();
+        ctx.translate(715,486); ctx.rotate(-7 * Math.PI / 180); ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(7,26,38,.8)'; ctx.shadowBlur = 9; ctx.font = '400 40px Iansui, "DFKai-SB", cursive'; ctx.fillText('浪漫爆表!!',0,0); ctx.restore();
       }
       ctx.fillStyle = '#fff7e6'; ctx.font = '700 62px serif'; ctx.fillText(name,60,220);
       ctx.fillStyle = '#ffe3a8'; ctx.font = '700 44px sans-serif'; ctx.fillText(title.primary,60,282);
