@@ -611,7 +611,7 @@
         <div class="card-dialogue" id="cardDialogue">徐志摩：世間萬物到了你的手中，都能變成一句情話。</div>
         <div class="card-stats">
           <div class="card-stat"><strong id="cardCorrect">8</strong>答對</div>
-          <div class="card-stat"><strong id="cardScore">40</strong>浪漫值</div>
+          <div class="card-stat"><strong id="cardScore">160</strong>浪漫值</div>
           <div class="card-stat"><strong id="cardComments">0</strong>回音</div>
         </div>
         <div class="card-badges"><div class="card-badges-label">本週獲得的情話徽章</div><div class="card-badges-list" id="cardBadgeList"></div></div>
@@ -1012,7 +1012,7 @@
     }));
 
     // 第二版課堂遊戲：每位學生有獨立題序、兩次機會、積分與詩人卡。
-    const GAME_VERSION = 4;
+    const GAME_VERSION = 5;
     const TARGET_CORRECT = 8;
     const deviceSalt = localStorage.getItem('poetryDeviceSalt') || crypto.randomUUID();
     localStorage.setItem('poetryDeviceSalt', deviceSalt);
@@ -1265,11 +1265,11 @@
         ? 'Baby，這一回，我把自己的情話只說一半。'
         : `Baby，${q.speaker}曾說過這句話，我替他只說一半。`;
       const feedback = post.feedback ? `<div class="game-feedback ${post.feedbackType}">${escapeHtml(post.feedback)}</div>` : '';
-      const attempt = !post.done && post.attempts === 1 ? '<span class="attempt-chip">還有最後一次機會・答對得 4 分</span>' : '';
+      const attempt = !post.done && post.attempts === 1 ? '<span class="attempt-chip">還有最後一次機會・答對得 15 分</span>' : '';
       const form = post.done ? '' : `<form class="answer-form game-answer-form" data-post-index="${index}"><input class="game-answer" autocomplete="off" aria-label="第 ${index + 1} 題接句答案" placeholder="接出這句情話的下半句…"><button class="send" aria-label="送出第 ${index + 1} 題答案">➤</button></form>`;
       const commentRows = post.comments.map(item => `<div class="comment"><span class="comment-face">🙂</span><div class="bubble"><strong>${escapeHtml(item.name)} <span class="comment-time">${escapeHtml(item.time)}</span></strong>${escapeHtml(item.text)}</div></div>`).join('');
       const bonus = post.done ? `<div class="bonus-comment"><small>每則至少 4 個字的回音＋1 分。</small><div class="guest-comments">${commentRows}</div><form class="answer-form game-comment-form" data-post-index="${index}"><input maxlength="120" aria-label="第 ${index + 1} 題自由留言" placeholder="回應徐志摩或這句情話…"><button class="send" aria-label="送出第 ${index + 1} 題留言">➤</button></form></div>` : '';
-      return `<article class="card post game-post" data-game-post="${index}"><div class="post-body"><div class="author"><img class="mini-avatar" src="xuzhimo-avatar.jpg" alt="徐志摩"><div class="author-text"><div class="author-name">徐志摩 <span class="verified">●</span></div><div class="meta">第 ${index + 1} 則挑戰貼文・🌐</div></div></div><div class="post-copy"><strong>${escapeHtml(intro)}</strong><br>不用逐字背誦，意思接近也算答對；第一次 5 分，第二次 4 分。</div><div class="challenge"><span class="challenge-label">${escapeHtml(q.category)}・${escapeHtml(q.speaker)}</span><p class="quote">「${escapeHtml(q.prefix)}<span class="blank">＿＿＿＿＿＿</span>。」</p><div class="challenge-footer question-foot"><span>個人專屬題序</span><span class="mechanism">${escapeHtml(q.mechanism)}</span></div></div>${attempt}${feedback}</div><div class="answer-box">${form}${bonus}</div></article>`;
+      return `<article class="card post game-post" data-game-post="${index}"><div class="post-body"><div class="author"><img class="mini-avatar" src="xuzhimo-avatar.jpg" alt="徐志摩"><div class="author-text"><div class="author-name">徐志摩 <span class="verified">●</span></div><div class="meta">第 ${index + 1} 則挑戰貼文・🌐</div></div></div><div class="post-copy"><strong>${escapeHtml(intro)}</strong><br>不用逐字背誦，意思接近也算答對；第一次 20 分，第二次 15 分。</div><div class="challenge"><span class="challenge-label">${escapeHtml(q.category)}・${escapeHtml(q.speaker)}</span><p class="quote">「${escapeHtml(q.prefix)}<span class="blank">＿＿＿＿＿＿</span>。」</p><div class="challenge-footer question-foot"><span>個人專屬題序</span><span class="mechanism">${escapeHtml(q.mechanism)}</span></div></div>${attempt}${feedback}</div><div class="answer-box">${form}${bonus}</div></article>`;
     }
     function renderGame(scrollToLast = false) {
       if (!gameState) return;
@@ -1281,7 +1281,7 @@
       post.done = true;
       post.correct = correct;
       if (correct) {
-        const points = post.attempts === 1 ? 5 : 4;
+        const points = post.attempts === 1 ? 20 : 15;
         gameState.score += points;
         gameState.correct += 1;
         if (post.attempts === 1) gameState.firstCorrect += 1; else gameState.secondCorrect += 1;
