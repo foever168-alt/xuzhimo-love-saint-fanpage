@@ -749,7 +749,6 @@
     let attemptCount = 0;
     let questionIndex = Number(localStorage.getItem('poetryQuestionIndex') || 0) % DATA.questions.length;
     let questionBankVersion = 'embedded';
-    let guestLiked = localStorage.getItem('guestPostLiked') === 'true';
     let guestComments = JSON.parse(localStorage.getItem('guestPostComments') || '[]');
 
     function currentQuestion() { return DATA.questions[questionIndex]; }
@@ -881,9 +880,10 @@
     $('#closeLeaderboard').addEventListener('click', () => { leaderboardBackdrop.hidden = true; });
     leaderboardBackdrop.addEventListener('click', event => { if (event.target === leaderboardBackdrop) leaderboardBackdrop.hidden = true; });
     function renderGuestLike() {
-      $('#guestLikeCount').textContent = guestLiked ? '521' : '520';
-      $('#guestLikeButton').textContent = guestLiked ? '♥ 已心動' : '♡ 心動';
-      $('#guestLikeButton').style.color = guestLiked ? '#d15e5e' : '';
+      const liked = Boolean(gameState?.guestLiked);
+      $('#guestLikeCount').textContent = liked ? '521' : '520';
+      $('#guestLikeButton').textContent = liked ? '♥ 已心動' : '♡ 心動';
+      $('#guestLikeButton').style.color = liked ? '#d15e5e' : '';
     }
     function renderGuestComments() {
       document.querySelectorAll('[data-user-guest-comment]').forEach(node => node.remove());
@@ -979,10 +979,17 @@
       showToast(event.currentTarget.textContent.includes('追蹤中') ? '已追蹤徐志摩的最新情話。' : '已取消追蹤。');
     });
     $('#guestLikeButton').addEventListener('click', () => {
-      guestLiked = !guestLiked;
-      localStorage.setItem('guestPostLiked', String(guestLiked));
+      if (!currentUser || !gameState) { openLogin(); return; }
+      gameState.guestLiked = !gameState.guestLiked;
+      if (gameState.guestLiked && !gameState.guestLikeBonusAwarded) {
+        gameState.guestLikeBonusAwarded = true;
+        gameState.commentPoints += 5;
+        gameState.score += 5;
+      }
+      saveGame();
       renderGuestLike();
-      showToast(guestLiked ? '你讓這則情話從 520 跳到 521 次心動。' : '已收回這次心動。');
+      updateGameStatus();
+      showToast(gameState.guestLiked ? '你讓這則情話從 520 跳到 521 次心動。' : '已收回這次心動。');
     });
     $('#guestCommentButton').addEventListener('click', () => currentUser ? $('#guestCommentInput').focus() : openLogin());
     $('#guestShareButton').addEventListener('click', () => showToast('試作版：分享功能會在正式串接時開放。'));
@@ -999,8 +1006,15 @@
       });
       localStorage.setItem('guestPostComments', JSON.stringify(guestComments));
       logPlayerComment({ questionId:'GUEST-QIAN-001', speaker:'錢鍾書', category:'名人情話', prompt:'沒遇到你之前，我沒想過結婚；遇見你，結婚這事我沒想過和別人。', text, location:'錢鍾書客座貼文' });
+      if (!gameState.guestCommentBonusAwarded) {
+        gameState.guestCommentBonusAwarded = true;
+        gameState.commentPoints += 5;
+        gameState.score += 5;
+      }
       input.value = '';
       renderGuestComments();
+      saveGame();
+      updateGameStatus();
       showToast('留言成功，已加入客座貼文。');
     });
     $('#likeButton').addEventListener('click', event => {
@@ -1086,6 +1100,7 @@
       return {
         version: GAME_VERSION, bankVersion: questionBankVersion, roundSeed, order, cursor: 0, correct: 0, score: 0,
         firstCorrect: 0, secondCorrect: 0, commentPoints: 0, badgeBonusIds: [],
+        guestLiked: false, guestLikeBonusAwarded: false, guestCommentBonusAwarded: false,
         categoryCounts: {}, completedIds: [], missedIds: [], cardUnlocked: false,
         posts: [newGamePost(order[0])]
       };
@@ -1136,6 +1151,9 @@
       return missedByCategory[question.category] || `徐志摩：答案沒有來赴約沒關係，你來了就好。原句是「${question.answer}」。下一封請繼續接住我。`;
     }
     function refreshLegacyGameReplies(state) {
+      state.guestLiked = Boolean(state.guestLiked);
+      state.guestLikeBonusAwarded = Boolean(state.guestLikeBonusAwarded);
+      state.guestCommentBonusAwarded = Boolean(state.guestCommentBonusAwarded);
       state.posts.forEach(post => {
         const question = questionById(post.qid);
         if (!question) return;
@@ -1354,7 +1372,7 @@
     function initPoetryGame(forceNew = false) {
       if (!currentUser) { $('#gameFeed').innerHTML = '<section class="card panel">登入後，徐志摩會為你排出專屬題目順序。</section>'; return; }
       gameState = loadGame(forceNew);
-      saveGame(); renderGame();
+      saveGame(); renderGame(); renderGuestLike();
     }
     $('#gameFeed').addEventListener('submit', event => {
       event.preventDefault();
