@@ -244,6 +244,7 @@
     .guest-comments { display: grid; gap: 10px; margin-bottom: 12px; }
     .guest-comments:empty { margin: 0; }
     .comment-time { margin-left: 7px; color: var(--muted); font-size: 12px; font-weight: 400; }
+    .comment-reaction { margin: -3px 0 -2px 41px; color: var(--muted); font-size: 12px; }
     .game-status { padding: 18px 20px; }
     .game-status-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
     .game-status h2 { margin: 0; font-size: 19px; }
@@ -551,7 +552,7 @@
           <p class="post-copy"><strong>昨日客座情話｜錢鍾書</strong><br>「沒遇到你之前，我沒想過結婚；遇見你，結婚這事我沒想過和別人。」</p>
         </div>
         <img class="media-img" src="cambridge-card.jpg" alt="粉彩風格的康橋晚霞與河面小舟">
-        <div class="post-body"><div class="post-stats"><span>💙 <b id="guestLikeCount">520</b> 人心動</span><span><b id="guestCommentCount">4</b> 則留言</span></div></div>
+        <div class="post-body"><div class="post-stats"><span>💙 <b id="guestLikeCount">520</b> 人心動</span><span><b id="guestCommentCount">6</b> 則留言</span></div></div>
         <div class="post-actions"><button id="guestLikeButton">♡ 心動</button><button id="guestCommentButton">◯ 留言</button><button id="guestShareButton">↗ 分享</button></div>
         <section class="guest-comment-section" aria-label="錢鍾書客座貼文留言區">
           <div class="guest-comments" id="guestComments">
@@ -559,6 +560,9 @@
             <div class="comment"><span class="comment-face">☁️</span><div class="bubble"><strong>林徽音 <span class="comment-time">昨天</span></strong>我愛你，與你無關。</div></div>
             <div class="comment"><span class="comment-face">🌹</span><div class="bubble"><strong>你的曼 <span class="comment-time">昨天</span></strong>我就是留言終結者......</div></div>
             <div class="comment"><span class="comment-face">📖</span><div class="bubble"><strong>張愛玲 <span class="comment-time">昨天</span></strong>二樓姐姐抄襲！</div></div>
+            <div class="comment"><span class="comment-face">🏰</span><div class="bubble"><strong>錢鍾書 <span class="comment-time">昨天</span></strong>城外的人想衝進去，城內的人想逃出來。想買我的《圍城》樓下＋1。</div></div>
+            <div class="comment-reaction">👍 胡蘭成按讚錢鍾書</div>
+            <div class="comment"><span class="comment-face">👍</span><div class="bubble"><strong>胡蘭成 <span class="comment-time">昨天</span></strong>＋1</div></div>
           </div>
           <form class="answer-form" id="guestCommentForm">
             <input id="guestCommentInput" maxlength="120" autocomplete="off" placeholder="回應這句客座情話…" aria-label="留言回應錢鍾書客座情話">
@@ -883,7 +887,7 @@
         row.append(face, bubble);
         $('#guestComments').append(row);
       }
-      $('#guestCommentCount').textContent = String(4 + guestComments.length);
+      $('#guestCommentCount').textContent = String(6 + guestComments.length);
     }
     function updateLoginState() {
       $('#loginButton').textContent = currentUser ? `♡ ${currentUser}` : '♡ 訪客登入';
